@@ -15,7 +15,8 @@ export const CATEGORY_WHITELIST = [
   "general",
 ];
 
-// BASE_URL respects vite `base: "./"` so fetches resolve under any deploy path.
+// BASE_URL respects vite `base` (currently "/skillsHub-de/") so fetches resolve
+// under the deploy subpath.
 const base = import.meta.env.BASE_URL;
 
 /** Load the catalog index (list) + skill bodies (detail) once. */

@@ -1,0 +1,70 @@
+name: Deploy site to GitHub Pages
+
+# Auto-deploy the static catalog site on every push to main (ADR-0005).
+# The build has two data-generation steps that MUST run before `vite build`
+# copies site/public/ into dist/:
+#   1. scripts/build-index.mjs (repo root)  -> site/public/index.json
+#   2. site/scripts/build-bodies.mjs (site prebuild) -> site/public/skills.json
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Least-privilege token: Pages deploy needs pages:write + id-token:write.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one concurrent Pages deploy; don't cancel an in-flight release.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # Repo-root deps (yaml) + generate site/public/index.json.
+      - name: Install root deps
+        run: npm ci
+
+      - name: Build catalog index (site/public/index.json)
+        run: node scripts/build-index.mjs
+
+      # Site deps + build. `prebuild` runs build-bodies.mjs, emitting
+      # site/public/skills.json before `vite build` copies public/ into dist/.
+      - name: Install site deps
+        working-directory: site
+        run: npm ci
+
+      - name: Build site (vite build -> site/dist)
+        working-directory: site
+        run: npm run build
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
