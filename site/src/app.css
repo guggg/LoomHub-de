@@ -457,6 +457,11 @@ button {
   padding: 3px 10px;
   font-size: 12px;
   font-weight: 600;
+  cursor: pointer;
+}
+.copy-btn:hover {
+  border-color: var(--brand);
+  color: var(--brand-hover);
 }
 .copy-btn.copied {
   background: var(--brand);

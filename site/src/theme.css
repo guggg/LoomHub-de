@@ -12,43 +12,46 @@
  *      (see the `--logo-*` tokens + <Logo/> in src/components/Header.jsx).
  *   Do NOT edit component JSX to restyle — only these tokens.
  *
- * MVP ships a neutral, readable placeholder theme (light, with an optional
- * dark mode via [data-theme="dark"]).
+ * BRAND: 國泰金控 (Cathay Financial Holdings). Signature green #009143
+ * (sourced from the official logo SVG). Restrained application — white/light
+ * surfaces with green as the accent (links/buttons/active/badges), per the
+ * Cathay corporate site's look. Dark mode uses a brighter green for contrast.
  * ========================================================================== */
 
 :root {
   /* --- Brand / logo slot -------------------------------------------------- */
-  --logo-bg: #3b4a6b;            /* placeholder logo tile color */
+  --logo-bg: #009143;            /* Cathay green (logo tile fallback bg) */
   --logo-fg: #ffffff;
-  --brand: #3b5bdb;              /* primary accent */
-  --brand-weak: #dbe4ff;
+  --brand: #009143;              /* Cathay signature green (official) */
+  --brand-hover: #00722e;        /* darker green for hover/emphasis */
+  --brand-weak: #e3f3e9;         /* pale green tint for weak fills */
   --on-brand: #ffffff;           /* text/icon on brand-colored backgrounds */
 
   /* --- Surfaces & text ---------------------------------------------------- */
-  --bg: #f6f7f9;
+  --bg: #f6f8f6;
   --surface: #ffffff;
-  --surface-2: #f0f2f5;
-  --border: #e2e5ea;
-  --text: #1f2430;
-  --text-muted: #667085;
+  --surface-2: #eef2ef;
+  --border: #e0e6e1;
+  --text: #1e241f;
+  --text-muted: #5f6b62;
 
   /* --- Badges (type / category) ------------------------------------------ */
-  --badge-type-bg: #e7f0ff;
-  --badge-type-fg: #1c4fb8;
-  --badge-cat-bg: #e9f7ef;
-  --badge-cat-fg: #1f7a4d;
-  --tag-bg: #f0f2f5;
-  --tag-fg: #4a5266;
+  --badge-type-bg: #e3f3e9;
+  --badge-type-fg: #00722e;
+  --badge-cat-bg: #eef2ef;
+  --badge-cat-fg: #3a5c46;
+  --tag-bg: #eef2ef;
+  --tag-fg: #4a5a4f;
 
   /* --- Terminal / demo blocks -------------------------------------------- */
-  --term-bg: #1b1f2a;
-  --term-fg: #d7dbe4;
-  --term-cmd: #7ee787;
+  --term-bg: #14201a;
+  --term-fg: #d7e4db;
+  --term-cmd: #6fba2c;           /* Cathay lime (top of logo gradient) */
   --term-bar-overlay: rgba(255, 255, 255, 0.06); /* terminal title-bar tint */
-  --term-dot: #4b5262;                            /* terminal window dots */
-  --bubble-user: #e7f0ff;
-  --bubble-agent: #f0f2f5;
-  --bubble-result: #e9f7ef;
+  --term-dot: #3f5247;                            /* terminal window dots */
+  --bubble-user: #e3f3e9;
+  --bubble-agent: #eef2ef;
+  --bubble-result: #dff0e4;
 
   /* --- Type -------------------------------------------------------------- */
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -70,25 +73,26 @@
   --maxw: 1200px;
 }
 
-/* Optional dark theme — MVP keeps it readable; final visuals TBD (§7.4). */
+/* Dark theme — Cathay green brightened for contrast on dark surfaces (§7.4). */
 :root[data-theme="dark"] {
-  --logo-bg: #5c6f9c;
-  --brand: #7ea0ff;
-  --brand-weak: #24304f;
-  --on-brand: #14171f;           /* dark text on the lighter dark-mode brand */
-  --bg: #14171f;
-  --surface: #1c2029;
-  --surface-2: #232833;
-  --border: #2c3240;
-  --text: #e6e9ef;
-  --text-muted: #9aa3b2;
-  --badge-type-bg: #24304f;
-  --badge-type-fg: #a8c1ff;
-  --badge-cat-bg: #1e3a2c;
+  --logo-bg: #009143;
+  --brand: #30a938;              /* brighter Cathay green for dark bg contrast */
+  --brand-hover: #6fba2c;        /* lime for hover in dark mode */
+  --brand-weak: #14301f;
+  --on-brand: #0c130e;           /* dark text on the brighter dark-mode green */
+  --bg: #0f150f;
+  --surface: #171f18;
+  --surface-2: #1e281f;
+  --border: #2a3a2c;
+  --text: #e6ece7;
+  --text-muted: #97a89b;
+  --badge-type-bg: #14301f;
+  --badge-type-fg: #7fd6a3;
+  --badge-cat-bg: #1a2c20;
   --badge-cat-fg: #7fd6a3;
-  --tag-bg: #232833;
-  --tag-fg: #b3bccb;
-  --bubble-user: #24304f;
-  --bubble-agent: #232833;
-  --bubble-result: #1e3a2c;
+  --tag-bg: #1e281f;
+  --tag-fg: #b3c4b8;
+  --bubble-user: #14301f;
+  --bubble-agent: #1e281f;
+  --bubble-result: #1a2c20;
 }
