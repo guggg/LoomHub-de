@@ -5,6 +5,7 @@ import { useTheme } from "../useTheme.js";
 import Header from "../components/Header.jsx";
 import Sidebar from "../components/Sidebar.jsx";
 import Card from "../components/Card.jsx";
+import Intro from "../components/Intro.jsx";
 
 const EMPTY = { type: [], category: [], tags: [] };
 
@@ -83,6 +84,7 @@ export default function Landing() {
         theme={theme}
         onToggleTheme={toggleTheme}
       />
+      <Intro />
       <div className="layout">
         <Sidebar
           allTags={allTags}

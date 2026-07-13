@@ -474,3 +474,64 @@ button {
   text-align: center;
   color: var(--text-muted);
 }
+
+/* Intro block (welcome for first-time visitors; atop the catalog). */
+.intro {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: var(--sp-5) var(--sp-5) 0;
+}
+.intro-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--brand);
+  margin: 0 0 var(--sp-2);
+}
+.intro-tagline {
+  color: var(--text-muted);
+  margin: 0 0 var(--sp-4);
+  max-width: 60ch;
+  line-height: 1.6;
+}
+.intro-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-3);
+}
+@media (max-width: 760px) {
+  .intro-cards { grid-template-columns: 1fr; }
+}
+.intro-card {
+  display: flex;
+  gap: var(--sp-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-3) var(--sp-4);
+}
+.intro-card-num {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--brand-weak);
+  color: var(--brand);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+.intro-card b { color: var(--text); font-size: 14px; }
+.intro-card p {
+  margin: var(--sp-1) 0 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.intro-card code {
+  background: var(--surface-2);
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
