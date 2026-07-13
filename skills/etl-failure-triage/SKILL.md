@@ -70,23 +70,6 @@ agent: 【最可能根因】1) Postgres 連線耗盡（高信度）——log 明
 result: 【立即檢查】① 連 warehouse 跑 `SELECT count(*) FROM pg_stat_activity;` 對照 max_connections ② 確認上游 export 已完成再重跑。【建議處置】先把 batch size 回退到 500 後重跑該 task；連線池若仍滿，暫時調高 pool 或分批。【升級】若回退後仍撞連線上限 → 升級 DBA 檢查 max_connections / 連線洩漏。
 ```
 
-## Demo / 範例
+## 複製 / 取用
 
-```demo-terminal
-$ airflow tasks failed-deps daily_sales_etl load_to_warehouse 2026-07-13
-# 貼上 DAG / task / log 到本範本，交給 agent 分診
-$ cat error.log | pbcopy   # 複製 log 摘要填入 {{error_log}}
-分診結論：根因=連線耗盡 → 回退 batch size 重跑 → 未解則升級 DBA
-```
-
-## 安裝 / Install
-
-```demo-terminal
-# Codex + Gemini（共用 ~/.agents/skills）
-$ ln -s "$PWD/skills/etl-failure-triage" ~/.agents/skills/etl-failure-triage
-# Claude Code
-$ ln -s "$PWD/skills/etl-failure-triage" ~/.claude/skills/etl-failure-triage
-# 若該 agent 不支援 symlink，改用 copy 作為 fallback（兩處都裝）
-$ cp -R skills/etl-failure-triage ~/.agents/skills/
-$ cp -R skills/etl-failure-triage ~/.claude/skills/
-```
+這是一段 **prompt 範本**，不需安裝進 agent——直接**複製「使用方式」裡的範本**、填好變數即可貼給任何 agent 使用（詳情頁提供一鍵複製）。若你想讓某個 agent 每次自動帶著這個分診框架，可再把它整理成 `type: skill` 的版本，那才走安裝流程。

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useCatalog } from "../data.js";
 import { useTheme } from "../useTheme.js";
@@ -11,20 +11,25 @@ import {
   installIntro,
 } from "../markdown.js";
 
+// Copy text to clipboard, with a textarea fallback for insecure/offline
+// contexts that lack the async clipboard API.
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+  }
+}
+
 function CopyButton({ text }) {
   const [copied, setCopied] = useState(false);
   const onCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      // Fallback for insecure/offline contexts without clipboard API.
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-    }
+    await copyText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
@@ -33,6 +38,49 @@ function CopyButton({ text }) {
       {copied ? "已複製 ✓" : "複製"}
     </button>
   );
+}
+
+// Render a marked-generated HTML chunk and, after it mounts, attach a
+// copy-to-clipboard button to every <pre> code block. marked output is injected
+// via dangerouslySetInnerHTML, so we post-process the DOM with a ref + effect.
+// Idempotent (guards against double-add on re-render) and cleans up on unmount.
+function MarkdownPart({ html }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const root = ref.current;
+    if (!root) return;
+    const timers = [];
+    const pres = root.querySelectorAll("pre");
+    pres.forEach((pre) => {
+      if (pre.querySelector(":scope > .code-copy-btn")) return; // idempotent
+      pre.classList.add("code-block");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "copy-btn code-copy-btn";
+      btn.textContent = "複製";
+      btn.addEventListener("click", async () => {
+        const code = pre.querySelector("code");
+        await copyText((code || pre).textContent);
+        btn.textContent = "已複製 ✓";
+        btn.classList.add("copied");
+        const t = setTimeout(() => {
+          btn.textContent = "複製";
+          btn.classList.remove("copied");
+        }, 1500);
+        timers.push(t);
+      });
+      pre.appendChild(btn);
+    });
+    return () => {
+      timers.forEach(clearTimeout);
+      pres.forEach((pre) => {
+        pre
+          .querySelectorAll(":scope > .code-copy-btn")
+          .forEach((b) => b.remove());
+      });
+    };
+  }, [html]);
+  return <div ref={ref} dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 export default function Detail() {
@@ -123,9 +171,7 @@ export default function Detail() {
                   return <DemoTerminal key={i} text={part.text} />;
                 if (part.type === "conversation")
                   return <DemoConversation key={i} text={part.text} />;
-                return (
-                  <div key={i} dangerouslySetInnerHTML={{ __html: part.html }} />
-                );
+                return <MarkdownPart key={i} html={part.html} />;
               })}
             </div>
 

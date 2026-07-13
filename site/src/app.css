@@ -329,6 +329,20 @@ button {
   padding: var(--sp-4);
   border-radius: var(--radius);
   overflow-x: auto;
+  position: relative;
+}
+/* Copy button attached to marked-rendered code blocks (see MarkdownPart). */
+.code-copy-btn {
+  position: absolute;
+  top: var(--sp-2);
+  right: var(--sp-2);
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.md-body pre.code-block:hover .code-copy-btn,
+.code-copy-btn:focus-visible,
+.code-copy-btn.copied {
+  opacity: 1;
 }
 .md-body pre code {
   background: none;
