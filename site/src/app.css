@@ -65,6 +65,14 @@ button {
   font-size: 15px;
   letter-spacing: -0.5px;
 }
+/* Real brand logo (site/public/logo.png). Swap the file to rebrand. */
+.logo-slot-img {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  display: block;
+}
 .site-title {
   font-weight: 700;
   font-size: 18px;

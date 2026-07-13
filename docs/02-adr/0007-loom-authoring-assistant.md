@@ -1,5 +1,3 @@
-｀
-
 # ADR-0007：Skill 製作助手（Loom）作為 hub skill，只 reference spec
 
 > 狀態：Accepted ｜ 日期：2026-07-09
