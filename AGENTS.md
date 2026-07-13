@@ -72,6 +72,12 @@ these fail, do NOT commit; produce a problem list, the contributor fixes it, the
 > How to check item 7: `git diff HEAD -- skills/<name>/` — if there is any content change and
 > the `version`/`updated` lines are unchanged, item 7 fails.
 
+**Optional fields for externally-collected assets:** if this asset was collected/adapted from
+an external source (not team-original), add `source` (origin URL) and `license` (the original's
+license, e.g. MIT), and a `## 來源 / 出處` body section explaining what was adapted. Confirm the
+license permits internal team use before collecting. These fields are optional and only apply to
+external assets.
+
 ---
 
 ## §5.2 — Overlap / dedup check (CLASSIFICATION-FIRST — advisory)

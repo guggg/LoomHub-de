@@ -95,6 +95,17 @@ export default function Detail() {
                 <span><b>維護</b> {skill.owner}</span>
                 <span><b>更新</b> {skill.updated}</span>
                 <span><b>路徑</b> {skill.path}</span>
+                {skill.source && (
+                  <span>
+                    <b>來源</b>{" "}
+                    <a href={skill.source} target="_blank" rel="noreferrer">
+                      原始出處
+                    </a>
+                  </span>
+                )}
+                {skill.license && (
+                  <span><b>授權</b> {skill.license}</span>
+                )}
                 {rawUrl && (
                   <span>
                     <a href={rawUrl} target="_blank" rel="noreferrer">
