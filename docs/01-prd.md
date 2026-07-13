@@ -77,6 +77,7 @@
 
 ## 6. 目錄、瀏覽與搜尋（FR-4）
 
+- **FR-4.0｜貢獻者不寫 HTML**：網站為一套**模板**，讀 `index.json` 與 `SKILL.md` 自動渲染任一 skill；貢獻者只寫 `SKILL.md`，永不撰寫頁面。視覺 / logo 為與結構分離的**主題層**，可獨立替換（見 Spec §7.2 / §7.4）。
 - **FR-4.1｜索引**：一支腳本掃描所有 skill 的 frontmatter，產生機器可讀的索引（`index.json`）。
 - **FR-4.2｜靜態目錄頁**：提供一個靜態頁面瀏覽所有 skill，卡片式呈現 name / description / type / category / tags / version / owner。
 - **FR-4.3｜搜尋**：頁面提供**即時模糊搜尋**（比對 name / description / tags），支援拼寫容錯與部分比對；起步不使用後端搜尋引擎。
