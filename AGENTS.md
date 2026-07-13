@@ -1,4 +1,4 @@
-# AGENTS.md — Commit-time self-check for skillsHub-de
+# AGENTS.md — Commit-time self-check for LoomHub-de
 
 > This file is the **pre-commit checklist** a contributor's AI agent runs before sharing or
 > updating a skill. It is written for **Claude Code, Codex, and Gemini** agents alike

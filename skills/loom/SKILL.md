@@ -63,14 +63,14 @@ result: 已在 skills/athena-query-optimizer/ 起草 SKILL.md（type: prompt, ca
 ```demo-terminal
 手動呼叫：
 $ /make-skill
-Loom：先確認本機 hub repo… 找到 ~/skillsHub-de（可讀 schema/ 與 skills/）✓
+Loom：先確認本機 hub repo… 找到 ~/LoomHub-de（可讀 schema/ 與 skills/）✓
 Loom：請描述要沈澱的工作，我會讀 schema + spec 起草，不重複格式規則。
 ```
 
 ## 安裝 / Install
 
 Loom 走標準安裝機制裝進你的 agent；**裝好後 Loom 會自動 bootstrap**（§9.0 / FR-7.7）：
-自動 `git clone` hub repo 到約定位置（如 `~/skillsHub-de/`，已存在則 `git pull`），並自動安裝
+自動 `git clone` hub repo 到約定位置（如 `~/LoomHub-de/`，已存在則 `git pull`），並自動安裝
 hub 內指定的相關 skill。起步權限**全開、無閘門**：clone / 裝 skill / push 貢獻皆自動，裝了即可讀可寫、立即可貢獻。
 
 ```demo-terminal

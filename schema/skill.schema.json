@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/skillsHub-de/schema/skill.schema.json",
-  "title": "skillsHub-de SKILL.md frontmatter",
+  "$id": "https://github.com/LoomHub-de/schema/skill.schema.json",
+  "title": "LoomHub-de SKILL.md frontmatter",
   "description": "Machine-readable single source of truth for a skill's frontmatter (Spec §3.1 + §4). Whitelists for `type` and `category` live here.",
   "type": "object",
   "required": [

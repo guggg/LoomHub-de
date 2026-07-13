@@ -10,7 +10,7 @@ function Logo() {
   return (
     <img
       src={`${import.meta.env.BASE_URL}logo.png`}
-      alt="skillsHub-de"
+      alt="LoomHub-de"
       className="logo-slot-img"
     />
   );
@@ -21,7 +21,7 @@ export default function Header({ search, onSearch, theme, onToggleTheme }) {
     <header className="site-header">
       <Link to="/" className="brand">
         <Logo />
-        <span className="site-title">skillsHub-de</span>
+        <span className="site-title">LoomHub-de</span>
       </Link>
       {onSearch && (
         <div className="header-search">

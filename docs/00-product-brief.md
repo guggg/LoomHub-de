@@ -1,4 +1,4 @@
-# 00 — Product Brief / Vision：skillsHub-de
+# 00 — Product Brief / Vision：LoomHub-de
 
 > 狀態：Draft ｜ 最後更新：2026-07-09 ｜ 負責人：DE Team
 
@@ -6,7 +6,7 @@
 
 ## 1. 一句話定位
 
-**skillsHub-de 是 Data Engineering 團隊用來「分享、蒐集、整理」可被 AI Agent 直接使用的 skill 的單一真實來源（single source of truth）。**
+**LoomHub-de 是 Data Engineering 團隊用來「分享、蒐集、整理」可被 AI Agent 直接使用的 skill 的單一真實來源（single source of truth）。**
 
 它不是拿來「創造」skill 的地方，而是把團隊在日常開發、維運、AI 專案中沈澱下來的 skill 匯集、規範化、可被搜尋、可被安裝使用的地方。
 
@@ -97,7 +97,7 @@
 Loom 是一個**安裝進每位成員 AI Agent（Claude Code / Codex / Gemini）的 skill 製作助手**，是整個 hub 的「創作入口（on-ramp）」：
 
 - 在任何專案協作中，**主動偵測**「這段工作可被沈澱為可重用 skill」的時機，**徵詢使用者**是否要製作。
-- 使用者同意後，啟動製作流程，產出**符合 skillsHub-de 格式**的 skill draft，再交棒給既有的 AI 檢核 + 重疊偵測與提交流程（免 PR：自檢通過即直接 commit + push）。
+- 使用者同意後，啟動製作流程，產出**符合 LoomHub-de 格式**的 skill draft，再交棒給既有的 AI 檢核 + 重疊偵測與提交流程（免 PR：自檢通過即直接 commit + push）。
 - **Loom 本身就是 hub 內的一個 skill**（dogfooding）：人人安裝，用 hub 的機制散佈「產生 hub 內容的工具」。
 
 分工原則（單一真實來源）：**格式 / 欄位 / 白名單 / 檢核規則由 hub 的 spec/schema 擁有；Loom 只擁有觸發時機、啟動方式、徵詢互動與交棒方式**——Loom 只 reference spec，不複製格式規則，避免漂移。

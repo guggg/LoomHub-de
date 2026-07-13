@@ -1,6 +1,6 @@
 # Architecture Decision Records (ADR)
 
-記錄 skillsHub-de 的關鍵技術決策。每篇一個決策，格式：Context / Decision / Consequences / Alternatives。
+記錄 LoomHub-de 的關鍵技術決策。每篇一個決策，格式：Context / Decision / Consequences / Alternatives。
 
 | ADR | 主題 | 決策摘要 | 狀態 |
 |---|---|---|---|
