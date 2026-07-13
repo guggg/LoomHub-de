@@ -23,7 +23,8 @@
 | `prompt` | reusable prompt template |
 | `mcp-server` | mountable MCP tool server (config + docs) |
 | `workflow` | multi-step / multi-agent reusable process |
-| `kb-template` | knowledge-base (RAG) build recipe / template |
+
+(RAG / knowledge-base assets use `skill` or `workflow` with `tags: [rag, kb, …]` — there is no separate `kb-template` type.)
 
 ### `category` — general work-activity stage (§4.2)
 

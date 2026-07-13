@@ -20,7 +20,7 @@ frontmatter 分兩層：
 - `description`（必填）—— 做什麼 + 何時用，關鍵字豐富，≤ 1024 字元。
 
 **B. 團隊治理擴充層**（標準的 `metadata` 或頂層擴充欄位，其他廠商忽略）
-- `type`（必填）∈ {`skill`, `prompt`, `mcp-server`, `workflow`, `kb-template`}
+- `type`（必填）∈ {`skill`, `prompt`, `mcp-server`, `workflow`}（RAG/知識庫歸 skill 或 workflow + tags，不另設 kb-template）
 - `category`（必填）∈ 通用工作活動分類 {`requirements`, `design`, `development`, `testing`, `ops`, `docs`, `research`, `general`}（領域字眼放 tags，見 spec §4.2）
 - `tags`（必填，可為空陣列）—— 自由標籤（含領域如 aws/azure/etl/rag）
 - `version`（必填）—— semver `x.y.z`

@@ -29,7 +29,7 @@ export default function Header({ search, onSearch, theme, onToggleTheme }) {
             type="search"
             value={search}
             onChange={(e) => onSearch(e.target.value)}
-            placeholder="搜尋 skill（名稱 / 描述 / 標籤）…"
+            placeholder="搜尋項目（名稱 / 描述 / 標籤）…"
             aria-label="搜尋"
           />
         </div>

@@ -33,8 +33,7 @@
         "skill",
         "prompt",
         "mcp-server",
-        "workflow",
-        "kb-template"
+        "workflow"
       ]
     },
     "category": {
