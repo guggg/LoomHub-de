@@ -1,0 +1,28 @@
+{
+  "name": "skillshub-de-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "skillsHub-de static catalog site (Spec §7.2).",
+  "scripts": {
+    "build-bodies": "node scripts/build-bodies.mjs",
+    "predev": "node scripts/build-bodies.mjs",
+    "dev": "vite",
+    "prebuild": "node scripts/build-bodies.mjs",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "fuse.js": "^7.0.0",
+    "highlight.js": "^11.10.0",
+    "marked": "^14.1.3",
+    "marked-highlight": "^2.2.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}
