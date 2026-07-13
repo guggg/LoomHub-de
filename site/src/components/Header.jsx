@@ -1,13 +1,19 @@
 import { Link } from "react-router-dom";
 
 /**
- * LOGO SLOT (Spec §7.4). MVP renders a neutral placeholder tile. To use the
- * real brand logo later, replace the tile below with e.g.
- *   <img src={logoUrl} alt="skillsHub-de" className="logo-slot-img" />
- * and adjust the --logo-* tokens in theme.css. Do NOT change other structure.
+ * LOGO SLOT (Spec §7.4). Renders the brand logo from site/public/logo.png.
+ * To change the logo, replace site/public/logo.png (same path) — no code
+ * change needed. Sizing/shape is controlled by .logo-slot-img in app.css and
+ * the --logo-* tokens in theme.css. Do NOT change other structure.
  */
 function Logo() {
-  return <div className="logo-slot" aria-hidden="true">sH</div>;
+  return (
+    <img
+      src={`${import.meta.env.BASE_URL}logo.png`}
+      alt="skillsHub-de"
+      className="logo-slot-img"
+    />
+  );
 }
 
 export default function Header({ search, onSearch, theme, onToggleTheme }) {
