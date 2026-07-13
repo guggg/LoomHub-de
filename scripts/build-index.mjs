@@ -26,7 +26,7 @@ const OUT_FILE = join(OUT_DIR, "index.json");
 // Whitelists — kept in sync with schema/skill.schema.json (Spec §4.1 / §4.2).
 // Hardcoded here so the builder has zero coupling to a JSON-schema validator;
 // if the schema changes, update these two arrays.
-const TYPE_WHITELIST = ["skill", "prompt", "mcp-server", "workflow", "kb-template"];
+const TYPE_WHITELIST = ["skill", "prompt", "mcp-server", "workflow"];
 const CATEGORY_WHITELIST = [
   "requirements",
   "design",

@@ -48,9 +48,10 @@
 
 1. **Agent Skill（`SKILL.md`，type=`skill`）** —— 含正文指令、輔助腳本、參考檔，可安裝進各家 agent 的 skill 目錄被執行。
 2. **Prompt 模板（type=`prompt`）** —— 可重用的 prompt 範本。
-3. **知識庫模板（type=`kb-template`）** —— RAG / 知識庫建置配方。
-4. **MCP Server（type=`mcp-server`）** —— 可被 agent 掛載的工具伺服器（設定 + 說明）。
-5. **AI Agent Workflow（type=`workflow`）** —— 多步驟 / 多 agent 的可重用流程。
+3. **MCP Server（type=`mcp-server`）** —— 可被 agent 掛載的工具伺服器（設定 + 說明）。
+4. **AI Agent Workflow（type=`workflow`）** —— 多步驟 / 多 agent 的可重用流程。
+
+> RAG / 知識庫建置類資產歸入 `skill` 或 `workflow`，以 `tags: [rag, kb, …]` 標示（不另設 kb-template type）。
 
 > 每個 skill 同時有**給 AI 看的部分**（安裝設定、agent 指令）與**給人看的部分**（使用方式、使用場景、demo）。後者會呈現在靜態目錄頁上，實際呈現方式於後續文件規劃。
 
@@ -122,7 +123,7 @@ Loom 是一個**安裝進每位成員 AI Agent（Claude Code / Codex / Gemini）
 
 | # | 議題 | 現況 / 待決 |
 |---|---|---|
-| Q1 | 分類法：type 與 category 兩維度的確切白名單 | 已定：type=skill/prompt/mcp-server/workflow/kb-template；category 採通用活動分類=requirements/design/development/testing/ops/docs/research/general（領域字眼放 tags），見 Spec §4 |
+| Q1 | 分類法：type 與 category 兩維度的確切白名單 | 已定：type=skill/prompt/mcp-server/workflow（RAG/知識庫歸 skill 或 workflow + tags）；category 採通用活動分類=requirements/design/development/testing/ops/docs/research/general（領域字眼放 tags），見 Spec §4 |
 | Q2 | 跨廠商相容：一個資料夾如何同時滿足 Claude/Codex/Gemini 安裝 | 已定：單一 agentskills.io 標準資料夾 + symlink 至 `.agents/skills`（Codex+Gemini）與 `.claude/skills`（Claude），見 ADR-0002 |
 | Q3 | 靜態目錄頁託管方式 | 已定：Azure Static Web Apps（主）/ GitHub Pages（備），見 ADR-0005 |
 | Q4 | 安裝機制 | 已定：symlink（copy 為 fallback）2 目標，見 ADR-0002 / Spec §6 |

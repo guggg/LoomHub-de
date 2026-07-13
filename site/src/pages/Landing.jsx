@@ -98,11 +98,11 @@ export default function Landing() {
           {!loading && !error && (
             <>
               <div className="results-meta">
-                {results.length} / {index.length} 個 skill
+                {results.length} / {index.length} 個項目
               </div>
               {results.length === 0 ? (
                 <div className="empty-state">
-                  沒有符合的 skill。試著調整搜尋關鍵字或清除篩選。
+                  沒有符合的項目。試著調整搜尋關鍵字或清除篩選。
                 </div>
               ) : (
                 <div className="card-wall">

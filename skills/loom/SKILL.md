@@ -5,7 +5,7 @@ type: skill
 category: general
 tags: [meta, skill-authoring, loom, bootstrap, contribution]
 version: 0.1.0
-owner: "@de-team"
+owner: "@Ty"
 updated: 2026-07-13
 ---
 

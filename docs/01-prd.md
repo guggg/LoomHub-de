@@ -38,7 +38,7 @@
 一個 skill = **一個資料夾**，同時包含「給 AI 看」與「給人看」兩部分。
 
 - **FR-1.1**：每個 skill 資料夾必須有一份帶 **frontmatter** 的主檔，frontmatter 至少含：`name`、`description`、`type`、`category`、`tags`、`version`(semver)、`owner`、`updated`。
-- **FR-1.2**：`type` ∈ {`skill`, `prompt`, `mcp-server`, `workflow`, `kb-template`}（白名單，Spec 定死）。
+- **FR-1.2**：`type` ∈ {`skill`, `prompt`, `mcp-server`, `workflow`}（白名單，Spec 定死；RAG/知識庫歸 skill 或 workflow + tags）。
 - **FR-1.3**：`category` 採**通用工作活動分類** ∈ {`requirements`, `design`, `development`, `testing`, `ops`, `docs`, `research`, `general`}（白名單，Spec 定死）。領域字眼（aws/azure/etl/rag 等）一律放 `tags`，不進 category。`tags` 為自由標籤。
 - **FR-1.4｜給 AI 看**：安裝所需的設定 / 腳本 / 指令，需能被 **Claude Code、Codex、Gemini 三家** agent 安裝使用（跨廠商相容機制見 ADR）。
 - **FR-1.5｜給人看**：需含 **使用方式、使用場景、demo / 範例** 等人類可讀說明，供靜態目錄頁呈現。
