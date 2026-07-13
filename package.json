@@ -8,7 +8,8 @@
     "node": ">=18"
   },
   "scripts": {
-    "build-index": "node scripts/build-index.mjs"
+    "build-index": "node scripts/build-index.mjs",
+    "install-skill": "node scripts/install-skill.mjs"
   },
   "dependencies": {
     "yaml": "^2.6.1"
