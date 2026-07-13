@@ -5,7 +5,7 @@ import { useTheme } from "../useTheme.js";
 import Header from "../components/Header.jsx";
 import Sidebar from "../components/Sidebar.jsx";
 import Card from "../components/Card.jsx";
-import Intro from "../components/Intro.jsx";
+// import Intro from "../components/Intro.jsx"; // 暫時隱藏（取消註解即可復原）
 
 const EMPTY = { type: [], category: [], tags: [] };
 
@@ -84,7 +84,7 @@ export default function Landing() {
         theme={theme}
         onToggleTheme={toggleTheme}
       />
-      <Intro />
+      {/* <Intro /> 暫時隱藏（取消上方 import 與此行註解即可復原） */}
       <div className="layout">
         <Sidebar
           allTags={allTags}
