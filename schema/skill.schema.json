@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/skillsHub-de/schema/skill.schema.json",
+  "title": "skillsHub-de SKILL.md frontmatter",
+  "description": "Machine-readable single source of truth for a skill's frontmatter (Spec §3.1 + §4). Whitelists for `type` and `category` live here.",
+  "type": "object",
+  "required": [
+    "name",
+    "description",
+    "type",
+    "category",
+    "tags",
+    "version",
+    "owner",
+    "updated"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "kebab-case; must equal the skill folder name; <= 64 chars.",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 64
+    },
+    "description": {
+      "type": "string",
+      "description": "What it does + when to use it; keyword-rich; <= 1024 chars.",
+      "maxLength": 1024
+    },
+    "type": {
+      "type": "string",
+      "description": "Kind of asset / how it installs (Spec §4.1 whitelist).",
+      "enum": [
+        "skill",
+        "prompt",
+        "mcp-server",
+        "workflow",
+        "kb-template"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "description": "General work-activity stage (Spec §4.2 whitelist). Domain words (aws/azure/etl/rag) go in tags, never here.",
+      "enum": [
+        "requirements",
+        "design",
+        "development",
+        "testing",
+        "ops",
+        "docs",
+        "research",
+        "general"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "description": "Free-form tags; may be empty; lowercase kebab-case recommended.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "version": {
+      "type": "string",
+      "description": "semver x.y.z (Spec §3.3).",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "owner": {
+      "type": "string",
+      "description": "Maintenance contact, e.g. @handle.",
+      "minLength": 1
+    },
+    "updated": {
+      "type": "string",
+      "description": "Last-updated date, YYYY-MM-DD.",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    }
+  },
+  "additionalProperties": true
+}
