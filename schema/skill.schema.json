@@ -71,6 +71,14 @@
       "type": "string",
       "description": "Last-updated date, YYYY-MM-DD.",
       "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "source": {
+      "type": "string",
+      "description": "OPTIONAL. Origin URL when this asset was collected/adapted from an external source (Spec §3.1). Omit for team-original assets."
+    },
+    "license": {
+      "type": "string",
+      "description": "OPTIONAL. License of the original asset when collected externally (e.g. MIT, Apache-2.0, or the original author's terms). Omit for team-original assets."
     }
   },
   "additionalProperties": true

@@ -59,6 +59,9 @@ const INDEX_FIELDS = [
   "version",
   "owner",
   "updated",
+  // Optional (null when absent): present for externally-collected assets.
+  "source",
+  "license",
 ];
 
 const KEBAB_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
