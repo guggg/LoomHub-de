@@ -1,0 +1,16 @@
+{
+  "name": "skillshub-de",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Team skill-sharing hub — tooling (Stage 2: index builder).",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build-index": "node scripts/build-index.mjs"
+  },
+  "dependencies": {
+    "yaml": "^2.6.1"
+  }
+}

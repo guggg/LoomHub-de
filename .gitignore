@@ -1,0 +1,10 @@
+# deps
+node_modules/
+
+# build junk / logs
+*.log
+.DS_Store
+
+# Note: site/public/index.json is a generated build artifact. It is intentionally
+# NOT ignored here so the static site can be deployed as-is, but see build-index.mjs
+# / the report: committing it is optional (the deploy pipeline regenerates it).
