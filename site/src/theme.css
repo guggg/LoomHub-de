@@ -1,0 +1,94 @@
+/* =============================================================================
+ * theme.css — THE THEME LAYER (Spec §7.4)
+ * -----------------------------------------------------------------------------
+ * This is the SINGLE place the team reskins the site. Everything visual —
+ * color, type, spacing, radius, shadow — is a CSS custom property (design
+ * token) declared here. Components reference ONLY these tokens, never raw
+ * values, so swapping the brand never touches component structure or logic.
+ *
+ * >>> TO REBRAND LATER <<<
+ *   1. Replace the token values in :root below with your brand palette/fonts.
+ *   2. Drop your real logo into src/assets/ and point the LOGO SLOT at it
+ *      (see the `--logo-*` tokens + <Logo/> in src/components/Header.jsx).
+ *   Do NOT edit component JSX to restyle — only these tokens.
+ *
+ * MVP ships a neutral, readable placeholder theme (light, with an optional
+ * dark mode via [data-theme="dark"]).
+ * ========================================================================== */
+
+:root {
+  /* --- Brand / logo slot -------------------------------------------------- */
+  --logo-bg: #3b4a6b;            /* placeholder logo tile color */
+  --logo-fg: #ffffff;
+  --brand: #3b5bdb;              /* primary accent */
+  --brand-weak: #dbe4ff;
+  --on-brand: #ffffff;           /* text/icon on brand-colored backgrounds */
+
+  /* --- Surfaces & text ---------------------------------------------------- */
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f0f2f5;
+  --border: #e2e5ea;
+  --text: #1f2430;
+  --text-muted: #667085;
+
+  /* --- Badges (type / category) ------------------------------------------ */
+  --badge-type-bg: #e7f0ff;
+  --badge-type-fg: #1c4fb8;
+  --badge-cat-bg: #e9f7ef;
+  --badge-cat-fg: #1f7a4d;
+  --tag-bg: #f0f2f5;
+  --tag-fg: #4a5266;
+
+  /* --- Terminal / demo blocks -------------------------------------------- */
+  --term-bg: #1b1f2a;
+  --term-fg: #d7dbe4;
+  --term-cmd: #7ee787;
+  --term-bar-overlay: rgba(255, 255, 255, 0.06); /* terminal title-bar tint */
+  --term-dot: #4b5262;                            /* terminal window dots */
+  --bubble-user: #e7f0ff;
+  --bubble-agent: #f0f2f5;
+  --bubble-result: #e9f7ef;
+
+  /* --- Type -------------------------------------------------------------- */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  /* --- Spacing / shape --------------------------------------------------- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 3px rgba(16, 24, 40, 0.08), 0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow-hover: 0 4px 12px rgba(16, 24, 40, 0.12);
+  --maxw: 1200px;
+}
+
+/* Optional dark theme — MVP keeps it readable; final visuals TBD (§7.4). */
+:root[data-theme="dark"] {
+  --logo-bg: #5c6f9c;
+  --brand: #7ea0ff;
+  --brand-weak: #24304f;
+  --on-brand: #14171f;           /* dark text on the lighter dark-mode brand */
+  --bg: #14171f;
+  --surface: #1c2029;
+  --surface-2: #232833;
+  --border: #2c3240;
+  --text: #e6e9ef;
+  --text-muted: #9aa3b2;
+  --badge-type-bg: #24304f;
+  --badge-type-fg: #a8c1ff;
+  --badge-cat-bg: #1e3a2c;
+  --badge-cat-fg: #7fd6a3;
+  --tag-bg: #232833;
+  --tag-fg: #b3bccb;
+  --bubble-user: #24304f;
+  --bubble-agent: #232833;
+  --bubble-result: #1e3a2c;
+}
