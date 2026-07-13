@@ -15,7 +15,7 @@ export const CATEGORY_WHITELIST = [
   "general",
 ];
 
-// BASE_URL respects vite `base` (currently "/skillsHub-de/") so fetches resolve
+// BASE_URL respects vite `base` (currently "/LoomHub-de/") so fetches resolve
 // under the deploy subpath.
 const base = import.meta.env.BASE_URL;
 

@@ -5,7 +5,7 @@
 
 ## Context
 
-skillsHub-de 需要一個載體來「分享 / 蒐集 / 整理」可被 AI Agent 使用的 skill。候選方向：(a) Git repo + 靜態目錄頁；(b) 自建 web app（後端 + DB + 搜尋引擎）；(c) 現成平台（Notion / Confluence）。
+LoomHub-de 需要一個載體來「分享 / 蒐集 / 整理」可被 AI Agent 使用的 skill。候選方向：(a) Git repo + 靜態目錄頁；(b) 自建 web app（後端 + DB + 搜尋引擎）；(c) 現成平台（Notion / Confluence）。
 
 關鍵約束：
 - skill 本身就是符合 agentskills.io 標準的檔案資料夾，最終要能被安裝進本機 agent。

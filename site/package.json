@@ -1,9 +1,9 @@
 {
-  "name": "skillshub-de-site",
+  "name": "loomhub-de-site",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "skillsHub-de static catalog site (Spec §7.2).",
+  "description": "LoomHub-de static catalog site (Spec §7.2).",
   "scripts": {
     "build-bodies": "node scripts/build-bodies.mjs",
     "predev": "node scripts/build-bodies.mjs",

@@ -1,9 +1,9 @@
-# 01 — PRD：skillsHub-de
+# 01 — PRD：LoomHub-de
 
 > 狀態：Draft ｜ 最後更新：2026-07-09 ｜ 負責人：DE Team
 > 上游文件：[00-product-brief.md](./00-product-brief.md)
 
-本文件定義 skillsHub-de 的**功能需求**（做什麼、行為為何），不鎖定實作技術（技術決策見 ADR 02-*）。
+本文件定義 LoomHub-de 的**功能需求**（做什麼、行為為何），不鎖定實作技術（技術決策見 ADR 02-*）。
 
 ---
 
