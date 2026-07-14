@@ -10,14 +10,15 @@
 
 **Definition:** A workflow asset (`type: workflow`) is a **multi-step, multi-agent reusable process** or procedure documented for teams to follow (and potentially execute). It sits between a single `prompt` (one-off template) and a `skill` (installed agent capability) — it orchestrates multiple steps and may involve cross-agent handoffs.
 
-| Aspect | Workflow | Skill | Prompt |
-|---|---|---|---|
-| **What it is** | Multi-step procedure (text-based steps or bundled executable) | Installed agent capability | Single template to copy |
-| **How you use it** | Follow the steps; may copy flow or install bundled scripts | Agent calls it by name | Copy, fill, and use |
-| **Installation** | Depends: pure steps → copy; bundled files → symlink or copy | Symlink to agent skill dir | None — text only |
-| **Final section** | 依內容而定 (copy steps OR install bundled files) | 安裝 / Install (symlink) | 複製 / 取用 (copy text) |
+| Aspect                   | Workflow                                                      | Skill                      | Prompt                  |
+| ------------------------ | ------------------------------------------------------------- | -------------------------- | ----------------------- |
+| **What it is**     | Multi-step procedure (text-based steps or bundled executable) | Installed agent capability | Single template to copy |
+| **How you use it** | Follow the steps; may copy flow or install bundled scripts    | Agent calls it by name     | Copy, fill, and use     |
+| **Installation**   | Depends: pure steps → copy; bundled files → symlink or copy | Symlink to agent skill dir | None — text only       |
+| **Final section**  | 依內容而定 (copy steps OR install bundled files)              | 安裝 / Install (symlink)   | 複製 / 取用 (copy text) |
 
 **When to use `type: workflow`:**
+
 - You have a **repeatable multi-step process** that teams follow (e.g., "how to onboard a new data source," "RAG knowledge-base build recipe," "incident response SOP").
 - The process may involve **multiple people, agents, or tools** working in sequence.
 - It produces **artifacts** (built models, indexed documents, deployed services) rather than just analysis.
@@ -45,12 +46,14 @@ Every workflow asset **must follow this section order** in `SKILL.md` (after fro
 ## 3. The Problem & Benefit (用途 / What)
 
 Clearly state:
+
 - **What end-to-end process does this describe?** (e.g., "building a RAG knowledge base from raw documents," "onboarding a new Postgres data source into the warehouse," "incident triage and mitigation").
 - **What is the **end goal?** (e.g., "runnable, tested dbt models; production-ready marts").
 - **Why is standardizing this workflow valuable?** (e.g., "ensures consistent naming, quality, documentation across data sources," "reduces time to onboard," "lowers defect rate").
 - **Who does this?** (data engineer, ML engineer, ops engineer, etc.).
 
 **Example:**
+
 ```markdown
 ## 用途 / What
 
@@ -72,11 +75,13 @@ This reduces onboarding time from 1–2 days to 2–3 hours and ensures every mo
 List concrete scenarios:
 
 **When to use:**
+
 - Ingesting a new data source that needs full dbt treatment (raw → staging → marts).
 - Onboarding a new analyst who needs to build their first model layer.
 - Standardizing existing ad-hoc models into the consistent three-layer structure.
 
 **When NOT to use:**
+
 - Just fixing a typo in an existing model (direct edit, no workflow needed).
 - One-off analysis that will never be reused.
 - Models already conforming to the structure; just need minor edits.
@@ -86,11 +91,13 @@ List concrete scenarios:
 ## 5. How to Execute (使用方式 / How)
 
 Keep this brief — it's an entry point, not a full guide. Just say:
+
 - **Where to start:** "Tell your agent: 'Run dbt-model-scaffold for raw.orders…'" or "Follow Step 1 in the steps below."
 - **Who orchestrates:** "Agent drives the workflow" OR "Human follows the manual steps."
 - **Output:** "Expect these artifacts at the end."
 
 **Example:**
+
 ```markdown
 ## 使用方式 / How
 
@@ -117,6 +124,7 @@ List **what must exist before starting:**
 - Permissions (who can create tables, push code, etc.).
 
 **Example:**
+
 ```markdown
 ## 前置條件 / Prerequisites
 
@@ -139,6 +147,7 @@ This is the **heart of the workflow**. Each step must be clear, testable, and pr
 ### 7.1 The Rule: Concrete Inputs → Outputs
 
 For each stage, state:
+
 - **What it does** — One-sentence action.
 - **Input** — What exists before this step.
 - **Output** — What is produced (file, query result, deployment, etc.).
@@ -146,14 +155,15 @@ For each stage, state:
 
 ### 7.2 BAD Example (Anti-pattern)
 
-| Step | Do This |
-|---|---|
-| 1 | Set up source |
-| 2 | Build staging |
-| 3 | Build marts |
-| 4 | Test |
+| Step | Do This       |
+| ---- | ------------- |
+| 1    | Set up source |
+| 2    | Build staging |
+| 3    | Build marts   |
+| 4    | Test          |
 
 **Why this is bad:**
+
 - No input/output details; reader doesn't know what "set up source" means concretely.
 - No verification; how do you know if staging is correct?
 - Missing intermediate step (no mention of intermediate models or how they differ from staging).
@@ -161,16 +171,17 @@ For each stage, state:
 
 ### 7.3 GOOD Example (Pattern to follow)
 
-| Step | What | Input | Output | Verify |
-|---|---|---|---|---|
-| 1 | Register source in `_sources.yml` | Source table name & primary key (e.g., raw.orders, order_id) | `models/staging/orders/_orders__sources.yml` with source + columns | `dbt list --select source:orders` shows the source |
-| 2 | Build staging model | Source registered; understand column mappings | `models/staging/orders/stg_orders__orders.sql` (SELECT * + EXCEPT secrets; rename columns; type-cast) | `dbt build --select stg_orders__orders` passes dbt compile & tests |
-| 3 | Build intermediate (optional) | Staging model; identify business logic needed | `models/intermediate/int_orders_enriched.sql` (add calculated fields, join with other tables) | `dbt build --select int_orders_enriched` passes; row counts match expectations |
-| 4 | Build mart | Intermediate or staging ready; know end-user query patterns | `models/marts/finance/fct_orders.sql` (SELECT final columns; join dims if needed) | `dbt build --select fct_orders` passes; user can query `SELECT * FROM marts.fct_orders LIMIT 10` |
-| 5 | Add tests to schema.yml | All models built; know PK & FK relationships | `models/marts/finance/fct_orders.yml` with `unique: order_id`, `not_null: order_id`, `relationships: customer_id → dim_customer.customer_id` | `dbt test --select fct_orders` passes all tests |
-| 6 | Run end-to-end build | All tests passing | `dbt build --select +fct_orders` runs 4 models + 8 tests; zero failures | Exit code 0; PASS count matches expected count |
+| Step | What                               | Input                                                        | Output                                                                                                                                                | Verify                                                                                               |
+| ---- | ---------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| 1    | Register source in`_sources.yml` | Source table name & primary key (e.g., raw.orders, order_id) | `models/staging/orders/_orders__sources.yml` with source + columns                                                                                  | `dbt list --select source:orders` shows the source                                                 |
+| 2    | Build staging model                | Source registered; understand column mappings                | `models/staging/orders/stg_orders__orders.sql` (SELECT * + EXCEPT secrets; rename columns; type-cast)                                               | `dbt build --select stg_orders__orders` passes dbt compile & tests                                 |
+| 3    | Build intermediate (optional)      | Staging model; identify business logic needed                | `models/intermediate/int_orders_enriched.sql` (add calculated fields, join with other tables)                                                       | `dbt build --select int_orders_enriched` passes; row counts match expectations                     |
+| 4    | Build mart                         | Intermediate or staging ready; know end-user query patterns  | `models/marts/finance/fct_orders.sql` (SELECT final columns; join dims if needed)                                                                   | `dbt build --select fct_orders` passes; user can query `SELECT * FROM marts.fct_orders LIMIT 10` |
+| 5    | Add tests to schema.yml            | All models built; know PK & FK relationships                 | `models/marts/finance/fct_orders.yml` with `unique: order_id`, `not_null: order_id`, `relationships: customer_id → dim_customer.customer_id` | `dbt test --select fct_orders` passes all tests                                                    |
+| 6    | Run end-to-end build               | All tests passing                                            | `dbt build --select +fct_orders` runs 4 models + 8 tests; zero failures                                                                             | Exit code 0; PASS count matches expected count                                                       |
 
 **Why this is good:**
+
 - Each step is **concrete**: a specific file is produced, with example path.
 - Inputs are **specific**: what data / files must exist before this step.
 - Outputs are **verifiable**: how to confirm success (file exists, test passes, query works).
@@ -384,18 +395,18 @@ agent> Run dbt-model-scaffold for raw.customers
 
 Every workflow asset must have these **8 required fields** (§3.1 of spec):
 
-| 欄位 | 值 / 說明 |
-|---|---|
-| `name` | kebab-case, ≤ 64 chars, equals folder name (e.g., `dbt-model-scaffold`) |
-| `description` | What + when; rich keywords; ≤ 1024 chars |
-| `type` | **`workflow`** (not `skill`, not `prompt`) |
-| `category` | One of: `requirements` / `design` / `development` / `testing` / `ops` / `docs` / `research` / `general` (see spec §4.2) |
-| `tags` | Array of lowercase kebab-case labels (e.g., `[dbt, sql, modeling, elt, warehouse]`) |
-| `version` | semver starting at `0.1.0` |
-| `owner` | Maintainer handle (e.g., `@Ty`) |
-| `updated` | Today's date in `YYYY-MM-DD` format |
-| `source` *(optional)* | URL if adapted from external source |
-| `license` *(optional)* | License string if adapted from external source |
+| 欄位                       | 值 / 說明                                                                                                                               |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`                   | kebab-case, ≤ 64 chars, equals folder name (e.g.,`dbt-model-scaffold`)                                                               |
+| `description`            | What + when; rich keywords; ≤ 1024 chars                                                                                               |
+| `type`                   | **`workflow`** (not `skill`, not `prompt`)                                                                                  |
+| `category`               | One of:`requirements` / `design` / `development` / `testing` / `ops` / `docs` / `research` / `general` (see spec §4.2) |
+| `tags`                   | Array of lowercase kebab-case labels (e.g.,`[dbt, sql, modeling, elt, warehouse]`)                                                    |
+| `version`                | semver starting at`0.1.0`                                                                                                             |
+| `owner`                  | Maintainer handle (e.g.,`@Ty`)                                                                                                        |
+| `updated`                | Today's date in`YYYY-MM-DD` format                                                                                                    |
+| `source` *(optional)*  | URL if adapted from external source                                                                                                     |
+| `license` *(optional)* | License string if adapted from external source                                                                                          |
 
 ---
 
@@ -416,7 +427,7 @@ Before submitting a workflow asset, verify:
   - [ ] Steps are in logical order; dependencies are clear.
 - [ ] **Demo / 範例:** End-to-end walkthrough (conversation or terminal); shows key stages; clear outputs.
 - [ ] **來源 / 出處** (if applicable): Original source, why adapted, what changed, license.
-- [ ] **Final section:** 
+- [ ] **Final section:**
   - [ ] If workflow has installable files → **安裝 / Install** (symlink/copy commands, agent discovery, test).
   - [ ] If workflow is pure steps → **取用 / 套用** (copy steps, adapt to context, reuse as template).
 - [ ] **Naming & path:** Folder name = `name` field in kebab-case; file is `SKILL.md`.
