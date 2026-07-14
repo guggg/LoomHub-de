@@ -8,3 +8,6 @@ node_modules/
 # Note: site/public/index.json is a generated build artifact. It is intentionally
 # NOT ignored here so the static site can be deployed as-is, but see build-index.mjs
 # / the report: committing it is optional (the deploy pipeline regenerates it).
+
+# 本機個人設定（含機器絕對路徑、permission allowlist），不進版控
+.claude/settings.local.json
