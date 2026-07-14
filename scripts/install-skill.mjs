@@ -60,10 +60,10 @@ const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
 // Skill-name shape — kebab-case, same regex as build-index.mjs (Spec §2:
 // name == folder name, kebab-case). Enforcing it EARLY also blocks path
 // traversal (e.g. "../../evil") from ever reaching a filesystem op.
-const KEBAB_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+export const KEBAB_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 /** Parse CLI args into { skillName, copy, project }. */
-function parseArgs(argv) {
+export function parseArgs(argv) {
   const out = { skillName: null, copy: false, project: null };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -71,7 +71,9 @@ function parseArgs(argv) {
       out.copy = true;
     } else if (a === "--project") {
       out.project = argv[++i];
-      if (!out.project) fail("--project requires a <path> argument");
+      if (!out.project || out.project.startsWith("--")) {
+        fail("--project requires a <path> argument");
+      }
     } else if (a === "-h" || a === "--help") {
       printUsage();
       process.exit(0);
@@ -103,7 +105,7 @@ function fail(msg) {
  * Verifies SKILL.md parses and carries the 8 required fields. Deep whitelist /
  * semver validation lives in build-index.mjs; we stay lightweight here.
  */
-function warnOnFrontmatter(skillMdPath, skillName) {
+export function warnOnFrontmatter(skillMdPath, skillName) {
   let raw;
   try {
     raw = readFileSync(skillMdPath, "utf8");
@@ -140,7 +142,7 @@ function warnOnFrontmatter(skillMdPath, skillName) {
  * Idempotent. Returns a status string: "installed" | "already" | "replaced".
  * Throws on real filesystem failure.
  */
-function installOne(src, target, useCopy) {
+export function installOne(src, target, useCopy) {
   // Defense in depth: never operate on a target that resolves to the source.
   // A destructive rmSync on a shared path would delete the source folder.
   if (resolve(target) === resolve(src)) {
@@ -287,4 +289,8 @@ function main() {
   process.exit(0);
 }
 
-main();
+// Only run when executed directly (`node scripts/install-skill.mjs ...`), not
+// when imported by tests (`import * as installSkill from "./install-skill.mjs"`).
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main();
+}

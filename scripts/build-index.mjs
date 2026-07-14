@@ -26,8 +26,8 @@ const OUT_FILE = join(OUT_DIR, "index.json");
 // Whitelists — kept in sync with schema/skill.schema.json (Spec §4.1 / §4.2).
 // Hardcoded here so the builder has zero coupling to a JSON-schema validator;
 // if the schema changes, update these two arrays.
-const TYPE_WHITELIST = ["skill", "prompt", "mcp-server", "workflow"];
-const CATEGORY_WHITELIST = [
+export const TYPE_WHITELIST = ["skill", "prompt", "mcp-server", "workflow"];
+export const CATEGORY_WHITELIST = [
   "requirements",
   "design",
   "development",
@@ -71,14 +71,14 @@ const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
 
 /** Split a SKILL.md into { frontmatter (raw yaml string), body }. */
-function splitFrontmatter(raw) {
+export function splitFrontmatter(raw) {
   const m = raw.match(FRONTMATTER_RE);
   if (!m) return null;
   return { yaml: m[1], body: m[2] ?? "" };
 }
 
 /** True if `updated` is both YYYY-MM-DD shaped AND a real calendar date. */
-function isValidDate(s) {
+export function isValidDate(s) {
   if (typeof s !== "string" || !DATE_RE.test(s)) return false;
   const [y, mo, d] = s.split("-").map(Number);
   const dt = new Date(Date.UTC(y, mo - 1, d));
@@ -90,7 +90,7 @@ function isValidDate(s) {
 }
 
 /** Body must contain the three required headings (Spec §5.1 item 6). */
-function hasRequiredHeadings(body) {
+export function hasRequiredHeadings(body) {
   const checks = [
     { label: "用途 / What", re: /^#{1,6}\s*用途/m },
     { label: "使用場景 / When", re: /^#{1,6}\s*使用場景/m },
@@ -109,7 +109,7 @@ function hasRequiredHeadings(body) {
  * cannot meaningfully assess whether a bump was *warranted*. It belongs to the
  * AGENTS.md pre-commit flow, not to catalog generation.
  */
-function checkCompliance(fm, folderName, body) {
+export function checkCompliance(fm, folderName, body) {
   const warnings = [];
 
   // 1. all 8 required frontmatter fields present.
@@ -161,7 +161,7 @@ function checkCompliance(fm, folderName, body) {
 }
 
 /** Build the index entry with exactly the Spec §7.1 fields, in order. */
-function toIndexEntry(fm, relPath) {
+export function toIndexEntry(fm, relPath) {
   const entry = {};
   for (const f of INDEX_FIELDS) {
     if (f === "tags") {
@@ -269,4 +269,7 @@ function main() {
   process.exit(0);
 }
 
-main();
+// Only run when executed directly, not when imported by tests.
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main();
+}

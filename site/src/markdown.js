@@ -25,7 +25,9 @@ marked.use(
 );
 marked.setOptions({ gfm: true, breaks: false });
 
-const INSTALL_HEADING_RE = /^#{1,6}\s*安裝\s*\/\s*Install\s*$/m;
+// Accepts both the general "安裝 / Install" heading and the mcp-server variant
+// "安裝 / 啟動" (spec §3.2.2) — either closes the install section.
+const INSTALL_HEADING_RE = /^#{1,6}\s*安裝\s*\/\s*(Install|啟動)\s*$/m;
 // Matches a demo fence and captures its kind + inner text.
 const DEMO_FENCE_RE = /```(demo-terminal|demo-conversation)[^\n]*\n([\s\S]*?)```/g;
 

@@ -9,9 +9,15 @@
   },
   "scripts": {
     "build-index": "node scripts/build-index.mjs",
-    "install-skill": "node scripts/install-skill.mjs"
+    "install-skill": "node scripts/install-skill.mjs",
+    "test:scripts": "vitest run",
+    "test:site": "npm --prefix site run test",
+    "test": "npm run test:scripts && npm run test:site"
   },
   "dependencies": {
     "yaml": "^2.6.1"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.10"
   }
 }
