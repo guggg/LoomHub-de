@@ -28,10 +28,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node 20
+      # Node 24 → npm 11, matching the npm that generated the lockfiles.
+      # (Node 20 / npm 10 misreads npm-11 lockfiles' esbuild optional-platform
+      # deps as "missing" and fails `npm ci`.)
+      - name: Set up Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
 
       # Repo-root deps (yaml) + generate site/public/index.json.
       - name: Install root deps
