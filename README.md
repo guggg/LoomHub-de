@@ -1,5 +1,10 @@
 # LoomHub-de
 
+> 🤖 **你是 AI Agent、剛收到使用者類似「幫我裝 LoomHub-de」+ repo URL 的指令？**
+> 請直接跳到下方 **[## 給 AI Agent 的安裝指示 / AI-Facing Install Instructions](#給-ai-agent-的安裝指示--ai-facing-install-instructions)**
+> 一節，逐步照做——不要自行翻讀原始碼、猜測安裝範圍，或憑「安裝資源到你的 Agent」小節
+> （那節是裝*hub 裡的單個資源*，不是裝*hub 本身*）自行推斷流程。
+
 **Data Engineering 團隊的 AI Agent 能力共享樞紐。** 一個集中的、版本化的資源庫，收錄可被 AI Agent 安裝並直接使用的技能、prompt 模板、MCP 工具伺服器，與多步驟工作流。
 
 > **英文 / English:** LoomHub-de is the DE team's hub for sharing and collecting reusable AI-agent-usable assets (skills, prompts, MCP servers, workflows) in one place.

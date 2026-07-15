@@ -112,6 +112,8 @@ existing skill (bump its version) instead of adding a new one.
    - §5.2 overlap verdict + the distinction text that still needs to be added (if any).
 2. Once **§5.1 fully passes** and any required §5.2 distinction is written, the contributor
    **commits and pushes directly to the main line** — no PR, no reviewer, no gate (trust-based,
-   ADR-0006). Startup permissions are fully open.
+   ADR-0006). This "fully open" trust applies ONLY to this contribution/push step — it does NOT
+   mean skip confirmation steps elsewhere (e.g. install/onboarding flows still require explicit
+   user confirmation before touching global config files; see README's AI-facing install section).
 3. After push, the catalog index must be rebuilt to show the skill (deploy pipeline or local
    rebuild — this is a deploy step, not a gate).
