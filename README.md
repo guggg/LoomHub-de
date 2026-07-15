@@ -52,6 +52,91 @@ node scripts/install-skill.mjs code-review-pr
 
 ---
 
+## 給 AI Agent 的安裝指示 / AI-Facing Install Instructions
+
+> **這一節是寫給 AI Agent 看的**：當使用者對你說類似「幫我裝 LoomHub-de」+ repo URL 時，
+> 依下列步驟逐一執行。任何專案下都可以進行，不限在 repo 內。機械 / 確定性的部分交給
+> `install.sh`（詳見 `docs/03-spec.md` §9.0）；互動、確認、編輯使用者全域檔案的部分由你
+> （agent）親自判斷與執行——**不要跳過確認步驟，也不要把整段流程委派給某支腳本**。
+
+**步驟：**
+
+1. **問 clone 路徑**。問使用者：「要把 LoomHub-de clone 到哪裡？」**不要預設固定路徑**；
+   若使用者沒有偏好，可以提議一個合理預設（例如 `~/LoomHub-de`），但一定要先問、等回答，
+   不能默默選定。把回答記為 `<REPO_PATH>`。
+
+2. **執行 `install.sh`**（機械部分，冪等）：
+
+   ```bash
+   ./install.sh <REPO_PATH>
+   ```
+
+   這會：不存在則 `git clone`、存在則 `git pull`，然後呼叫既有的
+   `node scripts/install-skill.mjs loom` 把 Loom skill 裝進本機 agent 目錄。若指令失敗
+   （非 0 exit code），停下來把錯誤訊息告知使用者，不要靜默略過。
+
+3. **問使用哪家 / 哪些 agent**。問使用者：「你用 Claude Code、Codex、還是 Gemini？（可多選）」
+
+4. **對每個選定的廠商，注入全域主動偵測區塊——先說明、再徵求同意、才動手**：
+
+   對應的全域檔案：
+
+   | Agent | 全域檔案路徑 |
+   |---|---|
+   | Claude Code | `~/.claude/CLAUDE.md` |
+   | Codex | `~/.codex/AGENTS.md` |
+   | Gemini | `~/.gemini/GEMINI.md` |
+
+   在編輯前，**先用一句話向使用者說明為什麼**，例如：
+
+   > 「我想在 `~/.claude/CLAUDE.md` 加一小段，讓我以後在任何專案的任何 session 都會留意
+   > 你的工作是否適合沈澱成 LoomHub-de 資產、並主動問你一句。可以加嗎？」
+
+   使用者同意後，把下面這段**固定文字**（`{{REPO_PATH}}` 換成步驟 1 的實際路徑）寫入該檔案：
+
+   ```markdown
+   <!-- LoomHub-de:start -->
+   ## LoomHub-de — skill 沈澱提醒
+
+   LoomHub-de 是團隊的 AI Agent 資產中心（skill / prompt / mcp-server / workflow）。
+   本機 repo 路徑：{{REPO_PATH}}
+
+   在與我協作的過程中，若察覺當前工作**可能值得沈澱成可重用資產**——出現這些訊號時：
+   - 同一類操作重複做了幾次
+   - 我把某流程明確整理成步驟
+   - 我說「以後也會這樣做」「每次都要這樣」之類的話
+   - 一段可參數化、可重用的指令 / 查詢 / 流程
+
+   ——請**主動、簡短地**問我一句：「這個要不要沈澱成 LoomHub-de 資產？」
+   若我同意，讀取 {{REPO_PATH}}/skills/loom/SKILL.md 並依它起草（Loom 會去讀 repo 內的
+   格式與檢核規則）。若我拒絕或說現在不要，就別再追問，繼續原本的工作。
+
+   原則：偵測是背景留意，不是打斷。不確定時傾向不問。
+   <!-- LoomHub-de:end -->
+   ```
+
+   合併規則（**冪等、可重跑**）：
+   - 檔案內若已有 `<!-- LoomHub-de:start -->` … `<!-- LoomHub-de:end -->` 界標 →
+     **取代**兩個界標之間的內容（更新，不重複新增）。
+   - 若無界標 → **附加**到檔尾（檔案不存在就建立）。
+   - 絕不覆蓋界標以外、使用者自己寫的其他內容。
+
+5. **給導覽介紹**（對話式、不是貼一大段文件）。用自己的話向使用者說明：
+   - LoomHub-de 是什麼——團隊的 AI Agent 資產中心（skill / prompt / mcp-server / workflow）。
+   - 怎麼瀏覽 / 安裝資產——目錄網站 + `node scripts/install-skill.mjs <name>`。
+   - 分享機制怎麼運作——之後在任何專案協作時，若偵測到值得沈澱的工作會主動問一句；同意後
+     Loom 依 hub 格式起草、跑自檢、**直接 commit + push，免 PR**。
+   - Authoring guide 在哪裡——`docs/authoring/`（依資源類型：prompt / skill / mcp-server / workflow）。
+
+**注意事項（給 agent）：**
+- 步驟 1、3、4 都是**互動式**，不可自行假設答案跳過。
+- 步驟 4 的「先說明再確認」是硬性要求，即使使用者在步驟 0 已經說了「幫我裝」，那只是同意
+  安裝 Loom，**不等於**同意修改他的全域個人設定檔——這兩件事要分開徵求同意。
+- `install.sh` 本身不會問問題、不會碰全域檔案——它只做 clone/pull + 呼叫
+  `install-skill.mjs`。互動、確認、注入的責任在 agent 身上，不在腳本身上。
+
+---
+
 ## 資源結構 / Asset Types
 
 Hub 收錄 4 種資源類型，各有不同的安裝方式與用途：
@@ -72,6 +157,7 @@ Hub 收錄 4 種資源類型，各有不同的安裝方式與用途：
 ```
 LoomHub-de/
 ├── README.md                      # 本文件
+├── install.sh                     # 安裝流程機械部分：clone/pull + 裝 Loom skill
 ├── AGENTS.md                      # AI Agent 檢核清單（提交前自檢用）
 ├── docs/                          # 設計文件 & authoring guide
 │   ├── 00-product-brief.md        # Vision 與目標
@@ -182,6 +268,10 @@ npm test
 每份指南詳解該類型的結構、demo 寫法、檢核清單。
 
 ### 用 Loom 自動起草 / Bootstrap with Loom
+
+> 這裡假設你已經有本機 clone、只想單獨裝 Loom 這個 skill 檔案。若是**第一次**接觸
+> LoomHub-de（還沒 clone、想要完整 onboarding：全域主動偵測 + 導覽介紹），請走上方
+> 「給 AI Agent 的安裝指示」小節。
 
 安裝 Loom（hub 內的技能製作助手）：
 
