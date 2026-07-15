@@ -34,7 +34,7 @@ import {
   realpathSync,
 } from "node:fs";
 import { join, dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { homedir } from "node:os";
 import { parse as parseYaml } from "yaml";
 
@@ -291,6 +291,10 @@ function main() {
 
 // Only run when executed directly (`node scripts/install-skill.mjs ...`), not
 // when imported by tests (`import * as installSkill from "./install-skill.mjs"`).
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Use pathToFileURL (not a raw `file://` template) so both sides percent-encode
+// identically — a raw template silently mismatches (and thus silently skips
+// main(), exiting 0 with nothing done) for any path containing spaces,
+// non-ASCII characters, `#`, or `?`.
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   main();
 }
