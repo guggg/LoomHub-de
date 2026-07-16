@@ -22,7 +22,7 @@
 | `skill` | agentskills.io standard SKILL.md capability |
 | `prompt` | reusable prompt template |
 | `mcp-server` | mountable MCP tool server (config + docs) |
-| `workflow` | multi-step / multi-agent reusable process |
+| `workflow` | methodology / standard describing HOW work should be done — referenced/followed, not executed to produce a result |
 
 (RAG / knowledge-base assets use `skill` or `workflow` with `tags: [rag, kb, …]` — there is no separate `kb-template` type.)
 
