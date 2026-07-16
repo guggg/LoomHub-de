@@ -38,6 +38,25 @@
     "path": "skills/etl-failure-triage"
   },
   {
+    "name": "exec-summary-zh",
+    "description": "可重用 prompt 範本，把落落長的英文技術文件濃縮成給主管看的中文摘要——貼上文件內容、受眾、想強調的重點後，產出固定格式的「三句話總結 → 關鍵風險 → 建議動作」摘要。適用於需要定期把英文技術文件（PRD、事後檢討 / postmortem、架構文件、稽核報告等）轉譯成主管易讀中文摘要、統一團隊摘要格式與風險呈現方式的場景。",
+    "type": "prompt",
+    "category": "docs",
+    "tags": [
+      "summarization",
+      "translation",
+      "executive-summary",
+      "zh",
+      "reporting"
+    ],
+    "version": "0.1.0",
+    "owner": "@GivorsHandsomeBoy",
+    "updated": "2026-07-16",
+    "source": null,
+    "license": null,
+    "path": "skills/exec-summary-zh"
+  },
+  {
     "name": "loom",
     "description": "Skill 製作助手——在協作中主動偵測「當前工作可沈澱為可重用 skill」的時機，徵詢使用者後依 hub spec/schema 起草 SKILL.md，再交棒給 §5 檢核並直接 commit + push。起草前需本機已有 hub repo clone（由安裝流程 README 的 AI Agent 安裝指示 + install.sh 完成，非 Loom 自身職責）。當你想把重複性工作變成團隊可共用的 skill 時使用。",
     "type": "skill",
@@ -55,6 +74,26 @@
     "source": null,
     "license": null,
     "path": "skills/loom"
+  },
+  {
+    "name": "notion-mcp-server",
+    "description": "Notion 官方遠端 MCP server 設定，讓 agent 能直接讀寫團隊 Notion 工作區——搜尋、讀取頁面/資料庫、建立與編輯頁面、建立資料庫與檢視、查詢資料庫、加註解等 18 個官方工具。透過 OAuth 一次性授權連線 https://mcp.notion.com/mcp，不需手動管理 API token。適用於讓 agent 自主查資料、建立/更新 Notion 頁面、整理會議記錄、回報進度，取代人工複製貼上內容到 Notion 的流程。",
+    "type": "mcp-server",
+    "category": "development",
+    "tags": [
+      "notion",
+      "mcp",
+      "oauth",
+      "knowledge-base",
+      "docs",
+      "collaboration"
+    ],
+    "version": "0.1.0",
+    "owner": "@GivorsHandsomeBoy",
+    "updated": "2026-07-16",
+    "source": "https://developers.notion.com/docs/mcp",
+    "license": "MIT",
+    "path": "skills/notion-mcp-server"
   },
   {
     "name": "postgres-mcp-server",
