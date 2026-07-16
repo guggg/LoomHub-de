@@ -113,7 +113,7 @@ LoomHub-de/
 §3.2 的三個核心小節（**用途 / 使用場景 / 使用方式**）為**所有 type 共用且必備**（檢核硬項）。核心之上，各 type 的延伸小節**因 type 而異**——不硬套同一組。尤其**末節的「取用方式」分兩類**：
 
 - **安裝型（skill / mcp-server）**：要裝進 agent 才能用 → 末節為 **安裝**（symlink，見 §6）。
-- **取用型（prompt / 純步驟 workflow）**：只是文字，複製拿去用即可 → 末節為 **複製 / 取用**（詳情頁提供一鍵複製本文），**不做 symlink 安裝**。
+- **取用型（prompt / workflow）**：只是文字，複製拿去用即可 → 末節為 **複製 / 取用**（詳情頁提供一鍵複製本文），**不做 symlink 安裝**。
 
 各 type 建議小節組合（建議、非硬擋；Loom 起草時依 type 帶入對應模板）：
 
@@ -122,7 +122,7 @@ LoomHub-de/
 | `skill` | **Demo / 範例** | **安裝 / Install**（symlink 三家） |
 | `prompt` | **變數 / 參數**（可填欄位）、**範例輸出**（實際輸入→輸出）、**模型建議**（若有） | **複製 / 取用**（複製 prompt 本文；無 symlink、通常也不需另立 Demo，範例輸出即示範） |
 | `mcp-server` | **提供的工具 / 資源**、**設定 / Config**（連線/env/金鑰） | **安裝 / 啟動**（裝 server + 設定） |
-| `workflow` | **步驟總覽**、**前置條件**、**Demo / 範例** | **依內容而定**：帶可裝進 agent 的檔 → **安裝**；純步驟文件 → **取用 / 套用**（複製流程） |
+| `workflow` | **適用原則**、**各階段標準**、**前置條件**、**Demo / 範例** | **取用 / 套用**（複製方法論 / 原則） |
 
 此外，**任何 type 若為外部蒐集而來**（`source` 有值），建議補 **來源 / 出處**（原始連結、原作者、授權、我們改了什麼 / 為何收錄）。
 
@@ -147,9 +147,9 @@ LoomHub-de/
 | `skill` | agentskills.io 標準 SKILL.md 能力 |
 | `prompt` | 可重用 prompt 範本 |
 | `mcp-server` | 可掛載的 MCP 工具伺服器（設定 + 說明） |
-| `workflow` | 多步驟 / 多 agent 可重用流程 |
+| `workflow` | 方法論 / 規範——描述「該怎麼做」的標準，非可執行的能力體 |
 
-> **註（kb-template 已移除）**：知識庫（RAG）建置類原本有獨立的 `kb-template` type，但它與 `skill` / `workflow` 界線模糊，故併掉。RAG / 知識庫相關資產改歸 `skill`（單一能力）或 `workflow`（多步驟建置流程），並以 `tags: [rag, kb, …]` 標示領域。
+> **註（kb-template 已移除）**：知識庫（RAG）建置類原本有獨立的 `kb-template` type，但它與 `skill` / `workflow` 界線模糊，故併掉。RAG / 知識庫相關資產改歸 `skill`（可執行的建置流程 / 腳本）或 `workflow`（RAG / 知識庫建置的方法論、品質標準），並以 `tags: [rag, kb, …]` 標示領域。
 
 ### 4.2 `category`（工作活動 / 階段 —— 通用分類）
 

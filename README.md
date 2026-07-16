@@ -5,7 +5,7 @@
 > 一節，逐步照做——不要自行翻讀原始碼、猜測安裝範圍，或憑「安裝資源到你的 Agent」小節
 > （那節是裝*hub 裡的單個資源*，不是裝*hub 本身*）自行推斷流程。
 
-**Data Engineering 團隊的 AI Agent 能力共享樞紐。** 一個集中的、版本化的資源庫，收錄可被 AI Agent 安裝並直接使用的技能、prompt 模板、MCP 工具伺服器，與多步驟工作流。
+**Data Engineering 團隊的 AI Agent 能力共享樞紐。** 一個集中的、版本化的資源庫，收錄可被 AI Agent 安裝並直接使用的技能、prompt 模板、MCP 工具伺服器，與描述「該怎麼做」的工作方法論。
 
 > **英文 / English:** LoomHub-de is the DE team's hub for sharing and collecting reusable AI-agent-usable assets (skills, prompts, MCP servers, workflows) in one place.
 
@@ -151,7 +151,7 @@ Hub 收錄 4 種資源類型，各有不同的安裝方式與用途：
 | **skill** | Agent 安裝的能力（指令 + demo） | Agent 已裝進去後能直接呼叫 | Symlink 到 agent 目錄 |
 | **prompt** | 可複製的 prompt 範本 | 複製、填變數、貼給 agent | 無（純文字） |
 | **mcp-server** | 掛在 agent 的工具伺服器 + 設定 | Agent 透過 MCP 呼叫工具 | 註冊到 MCP 設定 + 啟動 server |
-| **workflow** | 多步驟、可重用的流程 | 依步驟手動執行，或 agent 自動跑 | 取決於內容（純步驟 = 無；含腳本 = 安裝） |
+| **workflow** | 方法論 / 標準，描述「該怎麼做」而非可執行的能力體 | 人（自檢時參照）或 agent（審查時參照） | 複製套用（永遠，不安裝） |
 
 詳細說明見各類型的 authoring guide。
 

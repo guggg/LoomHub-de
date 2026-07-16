@@ -49,7 +49,7 @@
 1. **Agent Skill（`SKILL.md`，type=`skill`）** —— 含正文指令、輔助腳本、參考檔，可安裝進各家 agent 的 skill 目錄被執行。
 2. **Prompt 模板（type=`prompt`）** —— 可重用的 prompt 範本。
 3. **MCP Server（type=`mcp-server`）** —— 可被 agent 掛載的工具伺服器（設定 + 說明）。
-4. **AI Agent Workflow（type=`workflow`）** —— 多步驟 / 多 agent 的可重用流程。
+4. **方法論 / 規範（type=`workflow`）** —— 描述「該怎麼做」的標準 / 原則（如審查標準、品質關卡），非可被執行產出結果的能力體。
 
 > RAG / 知識庫建置類資產歸入 `skill` 或 `workflow`，以 `tags: [rag, kb, …]` 標示（不另設 kb-template type）。
 
