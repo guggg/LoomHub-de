@@ -110,10 +110,15 @@ existing skill (bump its version) instead of adding a new one.
 1. Produce a **human-readable conclusion** for the contributor to self-review:
    - §5.1 result: pass, or the itemized problem list.
    - §5.2 overlap verdict + the distinction text that still needs to be added (if any).
-2. Once **§5.1 fully passes** and any required §5.2 distinction is written, the contributor
+2. **Before committing, run `git pull` on the local clone.** This is trust-based / no-PR, not
+   no-sync — with multiple contributors pushing directly to main, a stale local clone risks a
+   rejected non-fast-forward push, or (worse) missing a sibling skill that would have changed
+   the §5.2 overlap verdict. Pull first, re-run §5.1/§5.2 if anything relevant changed, then
+   proceed.
+3. Once **§5.1 fully passes** and any required §5.2 distinction is written, the contributor
    **commits and pushes directly to the main line** — no PR, no reviewer, no gate (trust-based,
    ADR-0006). This "fully open" trust applies ONLY to this contribution/push step — it does NOT
    mean skip confirmation steps elsewhere (e.g. install/onboarding flows still require explicit
    user confirmation before touching global config files; see README's AI-facing install section).
-3. After push, the catalog index must be rebuilt to show the skill (deploy pipeline or local
+4. After push, the catalog index must be rebuilt to show the skill (deploy pipeline or local
    rebuild — this is a deploy step, not a gate).
