@@ -404,7 +404,8 @@ LoomHub-de 是團隊的 AI Agent 資產中心（skill / prompt / mcp-server / wo
 5. `scripts/build-index.mjs`（產 index.json + 規範檢核）。
 6. `site/`（Vite + React 目錄頁：搜尋 / 篩選 / 詳情 / 複製安裝指令）。
 7. **Loom skill 骨架** `skills/loom/SKILL.md`（§9：觸發 / 起草 / 交棒 / 單一真實來源原則）。
-8. `scripts/install-skill.mjs`（可選，或先文件化指令）。
-9. `README.md` + guideline。
+8. `scripts/install-skill.mjs`（已完成）。
+9. `scripts/check-updates.mjs`（已完成，§7.3）。
+10. `README.md` + guideline。
 
-> `check-updates.mjs` 與 `install-skill.mjs` 可列為雛形後續，視時間。Loom 起步以 `SKILL.md`（prompt 邏輯）為主，heuristic 可先簡版。
+> `install-skill.mjs`、`check-updates.mjs` 均已隨 MVP 交付，非後續雛形。Loom 起步以 `SKILL.md`（prompt 邏輯）為主，heuristic 可先簡版。
