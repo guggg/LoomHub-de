@@ -8,8 +8,11 @@
 > directly to the main line. There is no CI gate and no required reviewer.
 >
 > **Machine-readable source of truth:** `schema/skill.schema.json` (JSON Schema draft 2020-12).
-> The whitelists are restated inline below so you can run the check from this file alone, but
-> if this file and the schema ever disagree, **the schema wins**.
+> `scripts/taxonomy.mjs` reads this file at load time and derives `TYPE_WHITELIST` /
+> `CATEGORY_WHITELIST` / `REQUIRED_FIELDS` for `build-index.mjs` and `install-skill.mjs` — there
+> is no hand-maintained copy in either script. The whitelists are restated inline below so you can
+> run the check from this file alone, but if this file and the schema ever disagree, **the schema
+> wins** (and the scripts will already reflect it).
 
 ---
 
@@ -70,7 +73,10 @@ these fail, do NOT commit; produce a problem list, the contributor fixes it, the
    update detection (FR-6.2).
 
 > How to check item 7: `git diff HEAD -- skills/<name>/` — if there is any content change and
-> the `version`/`updated` lines are unchanged, item 7 fails.
+> the `version`/`updated` lines are unchanged, item 7 fails. `node scripts/check-version-bump.mjs`
+> automates this check across all changed skills in one run (advisory warning only, same
+> non-blocking spirit as `check-updates.mjs` — it never fails the commit, it just tells you what
+> to look at).
 
 **Optional fields for externally-collected assets:** if this asset was collected/adapted from
 an external source (not team-original), add `source` (origin URL) and `license` (the original's
