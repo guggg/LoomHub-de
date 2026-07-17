@@ -1,8 +1,10 @@
 # Prompt Asset Authoring Guide
 
-**State:** Draft | **Last updated:** 2026-07-13 | **Owner:** DE Team
+**State:** Draft | **Last updated:** 2026-07-17 | **Owner:** DE Team
 
-> **Audience:** Contributors authoring `type: prompt` assets, and Loom (skill-authoring assistant) when drafting prompt templates. This guide is referenced by §3.2.2 of the main spec.
+> **Audience:** Contributors authoring `type: prompt` assets, and Loom (skill-authoring assistant) when drafting prompt templates.
+>
+> **Shared rules live in [`docs/authoring/README.md`](./README.md) §3** (frontmatter 8 fields, common contributor checklist items, how Loom uses these guides, reference links) — this file only covers what's **specific to `type: prompt`**: the required section structure, variables table, and — the single most important part of this guide — §5's rule on example-output fidelity.
 
 ---
 
@@ -10,17 +12,12 @@
 
 **Definition:** A prompt asset (`type: prompt`) is a **reusable text template** you copy and fill with variables, then pass to an agent. It is **not installed** — you copy it directly into your agent's input.
 
-| Aspect | Prompt | Skill | Workflow |
-|---|---|---|---|
-| **What it is** | Template text with `{{variables}}` | Installed capability (agent can call it) | Multi-step process, often cross-agent |
-| **How you use it** | Copy the template, fill variables, paste | Agent calls it by name; no copy needed | Execute the steps; may use installed skills |
-| **Installation** | None — it's just text | Symlink into agent's skill dir (§6) | Depends on content; may be text-only |
-| **Final section** | 複製 / 取用 (copy the template) | 安裝 / Install (install-skill.mjs) | 取用 / 套用 (may vary) |
-
 **When to use `type: prompt`:**
 - You have a reusable thinking framework, checklist, or reasoning structure that multiple people will copy and customize.
 - Output is primarily text-based structured analysis (e.g., "triage decision," "design critique," "deployment checklist").
 - No need for agent-side installation or programmatic execution.
+
+> For how `prompt` differs from `skill` / `mcp-server` / `workflow`, see [`docs/authoring/README.md`](./README.md) §1.
 
 ---
 
@@ -36,7 +33,7 @@ Every prompt asset **must follow this section order** in `SKILL.md` (after front
 6. **模型建議** — *(Optional)* Recommended model tier, temperature, token budget, or hints (choose a capable model appropriate to the task; avoid pinning a specific outdated version — see §6).
 7. **複製 / 取用** — *Last section*. Explain how to copy and use (no symlink; detail page provides one-click copy).
 
-> ✅ §3.2 and §3.2.2 of the spec define core + type-specific sections. This guide elaborates the `prompt`-specific sections, especially **§5 (範例輸出)**, which is where most contributors fail.
+> ✅ Spec §3.2 / §3.2.2 define core + type-specific sections. This guide elaborates the `prompt`-specific ones, especially **§5 (範例輸出)**, which is where most contributors fail.
 
 ---
 
@@ -90,7 +87,7 @@ Output exactly 4 sections:
 
 Create a **table** with all placeholders. Columns: `變數` | `說明` | `範例`
 
-**Critical rule:** 
+**Critical rule:**
 - **Every placeholder in the template must appear in this table.**
 - **Every row in this table must be used in the template** (no orphan variables).
 
@@ -240,24 +237,9 @@ If the prompt has specific model or tuning requirements, add an optional **模�
 
 ---
 
-## 8. Frontmatter Checklist
+## 8. Frontmatter Example
 
-Every prompt asset must have these **8 required fields** (§3.1 of spec):
-
-| 欄位 | 值 / 說明 |
-|---|---|
-| `name` | kebab-case, ≤ 64 chars, equals folder name (e.g., `etl-failure-triage`) |
-| `description` | What + when; rich keywords; ≤ 1024 chars |
-| `type` | **`prompt`** (not `skill`, not `workflow`) |
-| `category` | One of: `requirements` / `design` / `development` / `testing` / `ops` / `docs` / `research` / `general` (see spec §4.2) |
-| `tags` | Array of lowercase kebab-case labels (e.g., `[etl, airflow, oncall, triage]`) |
-| `version` | semver starting at `0.1.0` |
-| `owner` | Maintainer handle (e.g., `@Ty`) |
-| `updated` | Today's date in `YYYY-MM-DD` format |
-| `source` *(optional)* | URL if adapted from external asset |
-| `license` *(optional)* | License string if adapted from external asset |
-
-**Example frontmatter:**
+**Example frontmatter** (field definitions are shared — see [`README.md`](./README.md) §3.1):
 ```yaml
 ---
 name: etl-failure-triage
@@ -273,11 +255,10 @@ updated: 2026-07-13
 
 ---
 
-## 9. Contributor Checklist
+## 9. Contributor Checklist (prompt-specific)
 
-Before submitting a prompt asset, verify:
+In addition to the shared checklist ([`README.md`](./README.md) §3.2), verify:
 
-- [ ] **Frontmatter:** All 8 required fields present; `type: prompt`; valid category; semver format.
 - [ ] **Section order:** 用途 / 使用場景 / 使用方式 / 變數 / 參數 / 範例輸出 / (optional 模型建議) / 複製 / 取用.
 - [ ] **Template (使用方式):** Code block present; includes agent role, constraints, explicit output structure, all variables as `{{name}}`.
 - [ ] **Variables (變數 / 參數):** Table with all placeholders; no orphans; each row has explanation + example.
@@ -287,23 +268,16 @@ Before submitting a prompt asset, verify:
   - [ ] No squashing or summarizing — full fidelity.
   - [ ] Rendered as `demo-conversation` or `demo-terminal` (preferred: `demo-conversation` for most prompts).
 - [ ] **Final section:** Last section is **複製 / 取用**, NOT **安裝**; explains copy-and-use flow (no symlink).
-- [ ] **Naming & path:** Folder name = `name` field in kebab-case; file is `SKILL.md`.
 
 ---
 
-## 10. Loom-Specific Notes
+## 10. Loom-Specific Note
 
-If Loom is drafting your prompt template:
-
-- Loom will **detect** that the work is a candidate for `type: prompt` (structured template, reusable logic, copy-and-paste pattern).
-- Loom will **read** `schema/skill.schema.json` and this guide (§8–9) to fill frontmatter and structure correctly.
-- **For 範例輸出**, Loom **must** ensure the example input matches the template's structure line-for-line, and the example output covers all demanded sections. This is the **single most important validation** Loom performs before handing off to §5 (AGENTS.md) checks.
-- Loom will **not** invent new sections or deviate from the structure above.
+For 範例輸出, Loom **must** ensure the example input matches the template's structure line-for-line, and the example output covers all demanded sections — this is the **single most important validation** Loom performs before handing off to `AGENTS.md` checks. (Shared Loom workflow: [`README.md`](./README.md) §3.3.)
 
 ---
 
 ## 11. Reference
 
-- **Main Spec:** `/docs/03-spec.md` — §3.2 (section structure), §3.2.1 (demo blocks), §3.2.2 (type-specific sections for `prompt`).
 - **Existing Prompt Sample:** `/skills/etl-failure-triage/SKILL.md` — exemplifies overall prompt structure. Note: its 範例輸出 is the **anti-pattern** this guide fixes (§5.2) — study it as a "what NOT to do" reference.
-- **Loom:** `/skills/loom/SKILL.md` — uses this guide + schema when drafting prompt assets.
+- Shared references (spec sections, schema, AGENTS.md, Loom): see [`docs/authoring/README.md`](./README.md) §3.5.

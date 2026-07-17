@@ -34,10 +34,10 @@
 node scripts/install-skill.mjs <skill-name>
 
 # 例：
-node scripts/install-skill.mjs code-review-pr
+node scripts/install-skill.mjs dbt-model-scaffold
 # 輸出：
-# ✓ Installed to ~/.agents/skills/code-review-pr
-# ✓ Installed to ~/.claude/skills/code-review-pr
+# ✓ Installed to ~/.agents/skills/dbt-model-scaffold
+# ✓ Installed to ~/.claude/skills/dbt-model-scaffold
 ```
 
 如果 script 不可用，手動使用 symlink（詳見各資源頁的安裝指令）。
@@ -97,28 +97,9 @@ node scripts/install-skill.mjs code-review-pr
    > 「我想在 `~/.claude/CLAUDE.md` 加一小段，讓我以後在任何專案的任何 session 都會留意
    > 你的工作是否適合沈澱成 LoomHub-de 資產、並主動問你一句。可以加嗎？」
 
-   使用者同意後，把下面這段**固定文字**（`{{REPO_PATH}}` 換成步驟 1 的實際路徑）寫入該檔案：
-
-   ```markdown
-   <!-- LoomHub-de:start -->
-   ## LoomHub-de — skill 沈澱提醒
-
-   LoomHub-de 是團隊的 AI Agent 資產中心（skill / prompt / mcp-server / workflow）。
-   本機 repo 路徑：{{REPO_PATH}}
-
-   在與我協作的過程中，若察覺當前工作**可能值得沈澱成可重用資產**——出現這些訊號時：
-   - 同一類操作重複做了幾次
-   - 我把某流程明確整理成步驟
-   - 我說「以後也會這樣做」「每次都要這樣」之類的話
-   - 一段可參數化、可重用的指令 / 查詢 / 流程
-
-   ——請**主動、簡短地**問我一句：「這個要不要沈澱成 LoomHub-de 資產？」
-   若我同意，讀取 {{REPO_PATH}}/skills/loom/SKILL.md 並依它起草（Loom 會去讀 repo 內的
-   格式與檢核規則）。若我拒絕或說現在不要，就別再追問，繼續原本的工作。
-
-   原則：偵測是背景留意，不是打斷。不確定時傾向不問。
-   <!-- LoomHub-de:end -->
-   ```
+   使用者同意後，把 **[`docs/templates/global-detection-block.md`](docs/templates/global-detection-block.md)**
+   裡的固定文字（`{{REPO_PATH}}` 換成步驟 1 的實際路徑）寫入該檔案。該檔是這段文字的唯一真實
+   來源——`docs/03-spec.md` §9.0 也引用同一份，不要各自複製。
 
    合併規則（**冪等、可重跑**）：
    - 檔案內若已有 `<!-- LoomHub-de:start -->` … `<!-- LoomHub-de:end -->` 界標 →
@@ -168,8 +149,7 @@ LoomHub-de/
 ├── install.sh                     # 安裝流程機械部分：clone/pull + 裝 Loom skill
 ├── AGENTS.md                      # AI Agent 檢核清單（提交前自檢用）
 ├── docs/                          # 設計文件 & authoring guide
-│   ├── 00-product-brief.md        # Vision 與目標
-│   ├── 01-prd.md                  # 功能需求
+│   ├── 01-prd.md                  # Vision / 目標 + 功能需求（Product Brief + PRD 合併）
 │   ├── 02-adr/                    # 架構決策紀錄
 │   ├── 03-spec.md                 # 實作規範（repo 結構、frontmatter、分類、檢核）
 │   └── authoring/                 # 各類型 authoring guide
@@ -235,7 +215,7 @@ npm run dev
 npm test
 ```
 
-143 個測試，涵蓋 frontmatter 檢核、semver、檔案結構、duplicate detection 等。
+涵蓋 frontmatter 檢核、semver、檔案結構、duplicate detection、安裝機制、目錄頁渲染等的完整測試套件（跑 `npm test` 看目前總數）。
 
 ---
 
@@ -262,7 +242,7 @@ npm test
 - [ ] 若有修改內容，版本號必升（否則更新偵測失效）。
 - [ ] 重疊偵測：同類資源中有無重複（有則補充「與 X 的區別」）。
 
-詳情見 `CONTRIBUTING.md`（若有）或 `/docs/03-spec.md` §5。
+詳情見 `AGENTS.md` 或 `/docs/03-spec.md` §5。
 
 ### 編寫指南 / Authoring Guides
 
@@ -312,8 +292,7 @@ node scripts/install-skill.mjs loom
 
 ### 主要託管 / Primary Hosting
 
-- **GitHub Pages**（當前） — https://guggg.github.io/LoomHub-de/
-- **Azure Static Web Apps**（可選備用） — TBD
+- **GitHub Pages** — https://guggg.github.io/LoomHub-de/
 
 ---
 
@@ -362,8 +341,7 @@ A: 目前是內部。Catalog 網站 GitHub Pages 託管但無登入機制（publ
 
 ## 相關文件 / Documentation
 
-- **[00 Product Brief](docs/00-product-brief.md)** — Vision、目標、非目標、成功指標。
-- **[01 PRD](docs/01-prd.md)** — 功能需求、使用者故事。
+- **[01 Product Brief & PRD](docs/01-prd.md)** — Vision、目標、非目標、成功指標、功能需求、使用者故事。
 - **[02 ADR（Architecture Decision Records）](docs/02-adr/README.md)** — 架構決策與理由。
 - **[03 Spec](docs/03-spec.md)** — Repo 結構、frontmatter、分類、檢核流程、安裝機制。
 - **[Authoring Guides](docs/authoring/)** — 各類型資源的撰寫指南。

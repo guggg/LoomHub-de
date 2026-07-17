@@ -1,8 +1,10 @@
 # MCP Server Asset Authoring Guide
 
-**State:** Draft | **Last updated:** 2026-07-14 | **Owner:** DE Team
+**State:** Draft | **Last updated:** 2026-07-17 | **Owner:** DE Team
 
-> **Audience:** Contributors authoring `type: mcp-server` assets, and Loom (skill-authoring assistant) when documenting MCP servers. This guide is referenced by §3.2.2 of the main spec.
+> **Audience:** Contributors authoring `type: mcp-server` assets, and Loom (skill-authoring assistant) when documenting MCP servers.
+>
+> **Shared rules live in [`docs/authoring/README.md`](./README.md) §3** (frontmatter 8 fields, common contributor checklist items, how Loom uses these guides, reference links) — this file only covers what's **specific to `type: mcp-server`**: the tools table, the config/security section, and installation/startup.
 
 ---
 
@@ -10,18 +12,13 @@
 
 **Definition:** An MCP server asset (`type: mcp-server`) is a **configuration + documentation** for a Model Context Protocol server that agents can mount to gain new tool capabilities. Unlike a `skill` (agent-side instructions), an MCP server is a **separate service** that exposes tools via MCP; the agent calls those tools.
 
-| Aspect | MCP Server | Skill | Prompt |
-|---|---|---|---|
-| **What it is** | Tool server + config (agent mounts it to gain capabilities) | Installed agent instructions | Template text to copy |
-| **How you use it** | Mount in agent config; agent discovers and calls tools | Agent calls by name; no config needed | Copy, fill, and paste |
-| **Installation** | Register server in MCP config + provide credentials/env | Symlink to agent skill dir | None — text only |
-| **Final section** | 安裝 / 啟動 (register server, set env, start) | 安裝 / Install (symlink) | 複製 / 取用 (copy) |
-
 **When to use `type: mcp-server`:**
 - You are **wrapping an external service** (database, API, cloud platform) as a tool server so agents can call it.
 - The server exposes **concrete tools** (functions the agent can invoke) — e.g., `query_database`, `upload_file`, `describe_resource`.
 - Setup requires **configuration** (connection strings, API keys, settings) beyond simple text.
 - Multiple team members will want their agents to mount this server.
+
+> For how `mcp-server` differs from `skill` / `prompt` / `workflow`, see [`docs/authoring/README.md`](./README.md) §1.
 
 ---
 
@@ -38,7 +35,7 @@ Every MCP server asset **must follow this section order** in `SKILL.md` (after f
 7. *(Optional)* **來源 / 出處** — If the server is from an external source and collected into the hub.
 8. **安裝 / 啟動** — *Last section*. How to register the server in agent MCP configs and start it.
 
-> ✅ §3.2 and §3.2.2 of the spec define core + type-specific sections. This guide elaborates the `mcp-server`-specific sections, especially **§4** (提供的工具 / 資源) and **§5** (設定 / Config), which are the load-bearing sections.
+> ✅ Spec §3.2 / §3.2.2 define core + type-specific sections. This guide elaborates the `mcp-server`-specific ones, especially **§4** (提供的工具 / 資源) and **§5** (設定 / Config), which are the load-bearing sections.
 
 ---
 
@@ -64,49 +61,11 @@ This MCP server wraps AWS S3, giving agents the ability to list buckets, upload 
 
 ---
 
-## 4. Use Cases & Constraints (使用場景 / When)
-
-List concrete scenarios:
-
-**When to use:**
-- Agents need to query a database for data exploration / debugging.
-- Agents should be able to list and browse cloud storage without you copy-pasting file listings.
-- Multi-turn workflows where agents fetch intermediate results and decide next steps.
-
-**When NOT to use:**
-- You don't want agents to have any access to the service (security policy forbids it).
-- The task is a one-off; mounting a permanent server is overkill.
-- The service already has excellent agent integration (e.g., built-in tool definitions); wrapping it adds no value.
-
----
-
-## 5. How Agents Use the Server (使用方式 / How)
-
-Keep this brief — it's not a setup guide (that's §8). Just explain:
-- **How the agent mounts it:** "Agent's MCP config includes this server entry…"
-- **How the agent invokes tools:** "Agent calls tools like `query_database(sql)`…"
-- **What happens behind the scenes:** "Server authenticates using provided credentials and forwards the request…"
-
-**Example:**
-```markdown
-## 使用方式 / How
-
-1. Add this server to your agent's MCP configuration (see §8 for exact config).
-2. Restart your agent; it will auto-discover the server's tools.
-3. Tell your agent things like "list tables in the analytics schema" or "run a query to count orders by month."
-4. Agent calls the appropriate tool (e.g., `list_tables(schema="analytics")` or `run_query(sql=…)`).
-5. Server authenticates using provided credentials, executes the request, and returns results.
-
-All queries are read-only; write requests are rejected by the server.
-```
-
----
-
-## 6. The Tools List (提供的工具 / 資源) — THE CRITICAL SECTION
+## 4. The Tools List (提供的工具 / 資源) — THE CRITICAL SECTION
 
 **This is where most contributors fail.** Vague descriptions hide missing functionality and make agents uncertain what they can do.
 
-### 6.1 The Rule: Concrete & Complete
+### 4.1 The Rule: Concrete & Complete
 
 You must **list every tool** the server exposes, with:
 
@@ -116,7 +75,7 @@ You must **list every tool** the server exposes, with:
 4. **What it does** — One-sentence description of purpose.
 5. **Constraints** — Any limits (max rows, max query time, allowed statement types, etc.).
 
-### 6.2 BAD Example (Anti-pattern)
+### 4.2 BAD Example (Anti-pattern)
 
 | Tool | Purpose |
 |---|---|
@@ -129,7 +88,7 @@ You must **list every tool** the server exposes, with:
 - "list database objects" is vague — tables, views, columns, schemas?
 - No constraints; agent might accidentally query 1 GB of data.
 
-### 6.3 GOOD Example (Pattern to follow)
+### 4.3 GOOD Example (Pattern to follow)
 
 | Tool | Parameters | Returns | Purpose | Constraints |
 |---|---|---|---|---|
@@ -144,7 +103,7 @@ You must **list every tool** the server exposes, with:
 - Return type and structure are clear (including nested objects and arrays).
 - Constraints are visible: what's forbidden, what limits apply.
 
-### 6.4 Table Template
+### 4.4 Table Template
 
 ```markdown
 | Tool | Parameters | Returns | Purpose | Constraints |
@@ -155,7 +114,7 @@ You must **list every tool** the server exposes, with:
 
 ---
 
-## 7. Configuration & Security (設定 / Config)
+## 5. Configuration & Security (設定 / Config)
 
 This section must cover:
 
@@ -165,7 +124,7 @@ This section must cover:
 4. **Credentials & secrets** — HOW to provide them safely (**never** write secrets into code).
 5. **Security considerations** — What access does the server have? Is it read-only? Are there rate limits?
 
-### 7.1 The Critical Security Rule
+### 5.1 The Critical Security Rule
 
 **NEVER commit real secrets.** Always use env var placeholders:
 
@@ -182,7 +141,7 @@ This section must cover:
 // Then set: export PG_PASSWORD='...' before running
 ```
 
-### 7.2 Example (Good Pattern)
+### 5.2 Example (Good Pattern)
 
 ```markdown
 ## 設定 / Config
@@ -230,15 +189,15 @@ Similar structure in `.agents/mcp.json` or your agent's MCP config file.
 
 ---
 
-## 8. Demo / 範例 — Server in Action
+## 6. Demo / 範例 — Server in Action
 
 Show the agent mounting and using the server's tools.
 
-### 8.1 GOOD Demo (Pattern to follow)
+### 6.1 GOOD Demo (Pattern to follow)
 
 ```demo-terminal
 $ # Agent with postgres-warehouse server mounted
-$ # (Assume config from §7 is in place and server is running)
+$ # (Assume config from §5 is in place and server is running)
 
 $ agent> list_schemas()
 ["public", "analytics", "staging"]
@@ -284,7 +243,7 @@ ERROR: read-only mode — statement type DELETE is not allowed. Only SELECT and 
 - Shows a **security win**: DELETE attempt is rejected by the server.
 - Readers can trace: "agent called this tool → got this result → can do X with it."
 
-### 8.2 Conversation-Style Demo (Alternative)
+### 6.2 Conversation-Style Demo (Alternative)
 
 ```demo-conversation
 user: I need to analyze sales by product for June 2026. First, explore the analytics schema for me.
@@ -310,7 +269,7 @@ result: Top 5 products by revenue in June:
 
 ---
 
-## 9. Source / Attribution (來源 / 出處) — If Applicable
+## 7. Source / Attribution (來源 / 出處) — If Applicable
 
 If this MCP server is collected from an external source:
 
@@ -328,15 +287,15 @@ If this MCP server is collected from an external source:
 
 ---
 
-## 10. Installation & Startup (安裝 / 啟動) — Last Section
+## 8. Installation & Startup (安裝 / 啟動) — Last Section
 
 Explain how to:
 1. **Get the server code** (npm install, git clone, etc.).
-2. **Configure it** (reference §7, with quick step-by-step).
+2. **Configure it** (reference §5, with quick step-by-step).
 3. **Start it** (command to run, how to verify it's running).
 4. **Integrate with agent** (register in MCP config, restart agent).
 
-### 10.1 GOOD Example
+### 8.1 GOOD Example
 
 ```markdown
 ## 安裝 / 啟動
@@ -361,7 +320,7 @@ Store this in your shell profile (`~/.zshrc`, `~/.bashrc`) to persist across ses
 
 ### Step 3: Add to MCP Config
 
-Edit your agent's MCP config file (see §7 for exact path). Add the postgres-warehouse server entry with the config from §7.
+Edit your agent's MCP config file (see §5 for exact path). Add the postgres-warehouse server entry with the config from §5.
 
 ### Step 4: Verify Server Starts
 
@@ -387,33 +346,29 @@ Agent should respond by calling list_tables() and returning the result.
 
 ---
 
-## 11. Frontmatter Checklist
+## 9. Frontmatter Example
 
-Every MCP server asset must have these **8 required fields** (§3.1 of spec):
-
-| 欄位 | 值 / 說明 |
-|---|---|
-| `name` | kebab-case, ≤ 64 chars, equals folder name (e.g., `postgres-mcp-server`) |
-| `description` | What + when; rich keywords; ≤ 1024 chars |
-| `type` | **`mcp-server`** (not `skill`, not `prompt`) |
-| `category` | One of: `requirements` / `design` / `development` / `testing` / `ops` / `docs` / `research` / `general` (see spec §4.2) |
-| `tags` | Array of lowercase kebab-case labels (e.g., `[postgres, mcp, database, read-only, warehouse]`) |
-| `version` | semver starting at `0.1.0` |
-| `owner` | Maintainer handle (e.g., `@Ty`) |
-| `updated` | Today's date in `YYYY-MM-DD` format |
-| `source` *(optional)* | URL if collected from external project |
-| `license` *(optional)* | License string (MIT, Apache-2.0, etc.) if from external source |
+**Example frontmatter** (field definitions are shared — see [`README.md`](./README.md) §3.1):
+```yaml
+---
+name: postgres-mcp-server
+description: Read-only Postgres warehouse MCP server exposing list_schemas / list_tables / describe_table / run_query tools, so agents can explore and query the analytics warehouse without manual SQL copy-paste.
+type: mcp-server
+category: development
+tags: [postgres, mcp, database, read-only, warehouse]
+version: 0.1.0
+owner: "@Ty"
+updated: 2026-07-14
+---
+```
 
 ---
 
-## 12. Contributor Checklist
+## 10. Contributor Checklist (mcp-server-specific)
 
-Before submitting an MCP server asset, verify:
+In addition to the shared checklist ([`README.md`](./README.md) §3.2), verify:
 
-- [ ] **Frontmatter:** All 8 required fields present; `type: mcp-server`; valid category; semver format.
 - [ ] **Section order:** 用途 / 使用場景 / 使用方式 / 提供的工具 / Config / Demo / (optional 來源 / 出處) / 安裝 / 啟動.
-- [ ] **用途 / What:** Clear statement of what external service is wrapped; what new tools the agent gains; safety measures.
-- [ ] **使用場景 / When:** Concrete use cases and non-use cases.
 - [ ] **提供的工具 / 資源:** Table with ALL tools; each has: name, parameters (name + type + required/optional), return type, purpose, constraints.
   - [ ] NO vague descriptions (bad: "query database"; good: "execute SELECT queries, max 10k rows, 5-min timeout").
   - [ ] Constraints are explicit (what's forbidden, what limits exist).
@@ -423,24 +378,16 @@ Before submitting an MCP server asset, verify:
 - [ ] **Demo / 範例:** Shows agent mounting server; calls each tool; shows output. Uses `demo-terminal` or `demo-conversation`.
 - [ ] **來源 / 出處** (if applicable): Original URL; why collected; what changes made; license retained.
 - [ ] **安裝 / 啟動:** Step-by-step: get code, configure env, add to MCP config, verify, restart agent, test.
-- [ ] **Naming & path:** Folder name = `name` field in kebab-case; file is `SKILL.md`.
 
 ---
 
-## 13. Loom-Specific Notes
+## 11. Loom-Specific Note
 
-If Loom is drafting your MCP server asset:
-
-- Loom will **detect** that the work is documenting an external tool server (connection to external service, tool definitions, security config).
-- Loom will **read** §6 (提供的工具 / 資源) patterns carefully — **every tool must be listed concretely** with parameters and constraints. This is the load-bearing section.
-- Loom will **check §7** (設定 / Config) for security: no hardcoded secrets, env var placeholders only. 
-- Loom will generate demo block(s) showing agent interacting with the server.
-- Loom will **not** invent new sections; structure must match spec §3.2.2.
+Loom must check §5 (設定 / Config) for security: no hardcoded secrets, env var placeholders only — this is non-negotiable for `mcp-server` drafts. (Shared Loom workflow: [`README.md`](./README.md) §3.3.)
 
 ---
 
-## 14. Reference
+## 12. Reference
 
-- **Main Spec:** `/docs/03-spec.md` — §3.2 (section structure), §3.2.2 (type-specific sections for `mcp-server`), §6 (install mechanism).
 - **Existing MCP Server Sample:** `/skills/postgres-mcp-server/SKILL.md` — exemplifies the full MCP server structure, including external source attribution.
-- **Loom:** `/skills/loom/SKILL.md` — uses this guide + schema when drafting MCP server assets.
+- Shared references (spec sections, schema, AGENTS.md, Loom): see [`docs/authoring/README.md`](./README.md) §3.5.

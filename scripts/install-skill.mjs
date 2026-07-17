@@ -37,22 +37,14 @@ import { join, dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { homedir } from "node:os";
 import { parse as parseYaml } from "yaml";
+import { REQUIRED_FIELDS } from "./taxonomy.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, "..");
 const SKILLS_DIR = join(REPO_ROOT, "skills");
 
-// Required frontmatter fields — Spec §3.1 (kept in sync with build-index.mjs).
-const REQUIRED_FIELDS = [
-  "name",
-  "description",
-  "type",
-  "category",
-  "tags",
-  "version",
-  "owner",
-  "updated",
-];
+// Required frontmatter fields — derived from schema/skill.schema.json at load
+// time via taxonomy.mjs (Spec §3.1). No hand-maintained copy.
 
 // Frontmatter fence, same regex shape as build-index.mjs.
 const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;

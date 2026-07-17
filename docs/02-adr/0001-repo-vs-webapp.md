@@ -1,7 +1,7 @@
 # ADR-0001：以 Git repo + 靜態目錄頁作為呈現形態
 
 > 狀態：Accepted ｜ 日期：2026-07-09
-> 相關：[00-product-brief](../00-product-brief.md)、[01-prd](../01-prd.md)
+> 相關：[01-prd](../01-prd.md)（含 Product Brief）
 
 ## Context
 

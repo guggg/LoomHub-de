@@ -32,3 +32,9 @@
 - **Azure Blob Storage static website**：更陽春、成本更低，但功能與整合不如 Static Web Apps。→ 作為更省的 Azure 內備選。
 - **GitHub Pages**：與 repo 同源、設定最簡。→ 列為等效備選（尤其 repo 若在 GitHub）。
 - **README 表格當目錄**：最省，但無即時搜尋 / 篩選 / 詳情頁，體驗差。→ 作為極簡 fallback。
+
+---
+
+> **狀態更新（2026-07-17）**：實際落地僅部署 **GitHub Pages**（見 `.github/workflows/deploy.yml`）；
+> 上方 Decision 提到的 Azure Static Web Apps 方案**從未被建置**，未被採用。此紀錄保留原始決策脈絡
+> 不做修改，現況請見 `README.md`「部署 / Deployment」一節。

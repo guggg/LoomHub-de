@@ -1,12 +1,12 @@
 ---
 name: dbt-model-scaffold
-description: 多步驟 workflow，依團隊 dbt 慣例把一個新來源 scaffold 成完整的 staging → intermediate → mart 三層模型，並自動補上 schema.yml 測試（unique / not_null / relationships）。適用於接入新資料表、建立新的分析模型時，省去手刻樣板、統一命名與測試覆蓋。
-type: workflow
+description: 多步驟 skill，依團隊 dbt 慣例把一個新來源 scaffold 成完整的 staging → intermediate → mart 三層模型，並自動補上 schema.yml 測試（unique / not_null / relationships）。適用於接入新資料表、建立新的分析模型時，省去手刻樣板、統一命名與測試覆蓋。
+type: skill
 category: development
 tags: [dbt, sql, modeling, data-warehouse, elt]
-version: 0.1.0
+version: 0.2.0
 owner: "@Ty"
-updated: 2026-07-13
+updated: 2026-07-17
 ---
 
 ## 用途 / What

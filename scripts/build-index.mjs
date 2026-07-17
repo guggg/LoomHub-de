@@ -16,6 +16,7 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, statSync } from "n
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
+import { TYPE_WHITELIST, CATEGORY_WHITELIST, REQUIRED_FIELDS } from "./taxonomy.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, "..");
@@ -23,31 +24,9 @@ const SKILLS_DIR = join(REPO_ROOT, "skills");
 const OUT_DIR = join(REPO_ROOT, "site", "public");
 const OUT_FILE = join(OUT_DIR, "index.json");
 
-// Whitelists — kept in sync with schema/skill.schema.json (Spec §4.1 / §4.2).
-// Hardcoded here so the builder has zero coupling to a JSON-schema validator;
-// if the schema changes, update these two arrays.
-export const TYPE_WHITELIST = ["skill", "prompt", "mcp-server", "workflow"];
-export const CATEGORY_WHITELIST = [
-  "requirements",
-  "design",
-  "development",
-  "testing",
-  "ops",
-  "docs",
-  "research",
-  "general",
-];
-
-const REQUIRED_FIELDS = [
-  "name",
-  "description",
-  "type",
-  "category",
-  "tags",
-  "version",
-  "owner",
-  "updated",
-];
+// Whitelists / required fields are derived from schema/skill.schema.json at
+// load time via taxonomy.mjs (Spec §4.1 / §4.2) — no hand-maintained copy.
+export { TYPE_WHITELIST, CATEGORY_WHITELIST };
 
 // The 9 catalog fields written to index.json (Spec §7.1). `path` is derived.
 const INDEX_FIELDS = [
