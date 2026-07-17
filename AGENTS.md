@@ -114,7 +114,9 @@ existing skill (bump its version) instead of adding a new one.
    no-sync — with multiple contributors pushing directly to main, a stale local clone risks a
    rejected non-fast-forward push, or (worse) missing a sibling skill that would have changed
    the §5.2 overlap verdict. Pull first, re-run §5.1/§5.2 if anything relevant changed, then
-   proceed.
+   proceed. `node scripts/check-updates.mjs` gives a more precise view before pulling — it
+   diffs each skill's version against `origin/main` and flags any local skill whose content has
+   diverged but not yet been pushed back.
 3. Once **§5.1 fully passes** and any required §5.2 distinction is written, the contributor
    **commits and pushes directly to the main line** — no PR, no reviewer, no gate (trust-based,
    ADR-0006). This "fully open" trust applies ONLY to this contribution/push step — it does NOT
