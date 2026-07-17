@@ -242,7 +242,7 @@ If the prompt has specific model or tuning requirements, add an optional **模�
 **Example frontmatter** (field definitions are shared — see [`README.md`](./README.md) §3.1):
 ```yaml
 ---
-name: etl-failure-triage
+name: my-prompt
 description: Reusable prompt template for quick ETL/Airflow incident triage—on-call inputs DAG, task, error log, and environment context; prompt outputs structured root-cause hypotheses, immediate check steps, action recommendations, and escalation decision.
 type: prompt
 category: ops
@@ -279,5 +279,5 @@ For 範例輸出, Loom **must** ensure the example input matches the template's 
 
 ## 11. Reference
 
-- **Existing Prompt Sample:** `/skills/etl-failure-triage/SKILL.md` — exemplifies overall prompt structure. Note: its 範例輸出 is the **anti-pattern** this guide fixes (§5.2) — study it as a "what NOT to do" reference.
+- **Anti-pattern reference:** See §5.2 (BAD Example) and §5.3 (GOOD Example) above for the good/bad 範例輸出 pair — no separate sample asset needed.
 - Shared references (spec sections, schema, AGENTS.md, Loom): see [`docs/authoring/README.md`](./README.md) §3.5.

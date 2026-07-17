@@ -351,7 +351,7 @@ Agent should respond by calling list_tables() and returning the result.
 **Example frontmatter** (field definitions are shared — see [`README.md`](./README.md) §3.1):
 ```yaml
 ---
-name: postgres-mcp-server
+name: my-mcp-server
 description: Read-only Postgres warehouse MCP server exposing list_schemas / list_tables / describe_table / run_query tools, so agents can explore and query the analytics warehouse without manual SQL copy-paste.
 type: mcp-server
 category: development
@@ -389,5 +389,5 @@ Loom must check §5 (設定 / Config) for security: no hardcoded secrets, env va
 
 ## 12. Reference
 
-- **Existing MCP Server Sample:** `/skills/postgres-mcp-server/SKILL.md` — exemplifies the full MCP server structure, including external source attribution.
+- **Existing MCP Server Sample:** None currently in the hub — see the structural requirements and frontmatter example above instead.
 - Shared references (spec sections, schema, AGENTS.md, Loom): see [`docs/authoring/README.md`](./README.md) §3.5.
