@@ -249,5 +249,5 @@ Loom must read §4 (適用原則 / 各階段標準) carefully — each dimension
 
 ## 11. Reference
 
-- **Existing Skill Sample (not workflow):** `/skills/dbt-model-scaffold/SKILL.md` was reclassified from `workflow` to `skill` (2026-07-17) — it's an executable scaffold checklist, not a methodology. Use the worked example in §5 above, not that file, as your `workflow` pattern to follow.
+- **Note:** A past contributor asset was once mis-tagged as `workflow` when it was really an executable scaffold checklist — i.e. `type: skill`, not `workflow`. If you find yourself wanting an 安裝 section (see §9's checklist), that's the same tell: reclassify as `skill` instead. Use the worked example in §5 above as your `workflow` pattern to follow.
 - Shared references (spec sections, schema, AGENTS.md, Loom): see [`docs/authoring/README.md`](./README.md) §3.5.

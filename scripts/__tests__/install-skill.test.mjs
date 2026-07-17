@@ -46,10 +46,10 @@ function runCli(args) {
 describe("KEBAB_RE (name validation / path-traversal guard)", () => {
   it.each([
     "loom",
-    "dbt-model-scaffold",
+    "some-multi-word-name",
     "a",
     "a1-b2",
-    "postgres-mcp-server",
+    "another-multi-word-name",
   ])("accepts valid kebab-case name %s", (name) => {
     expect(KEBAB_RE.test(name)).toBe(true);
   });

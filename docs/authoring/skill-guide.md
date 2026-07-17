@@ -169,22 +169,22 @@ Demo content is plain Markdown + fenced code blocks with special prefixes (see S
 
 \```demo-terminal
 # Codex + Gemini（共用 ~/.agents/skills）
-$ ln -s "$PWD/skills/dbt-model-scaffold" ~/.agents/skills/dbt-model-scaffold
+$ ln -s "$PWD/skills/my-skill" ~/.agents/skills/my-skill
 
 # Claude Code
-$ ln -s "$PWD/skills/dbt-model-scaffold" ~/.claude/skills/dbt-model-scaffold
+$ ln -s "$PWD/skills/my-skill" ~/.claude/skills/my-skill
 
 # Fallback（若 symlink 不支援）：改用 copy
-$ cp -R skills/dbt-model-scaffold ~/.agents/skills/
-$ cp -R skills/dbt-model-scaffold ~/.claude/skills/
+$ cp -R skills/my-skill ~/.agents/skills/
+$ cp -R skills/my-skill ~/.claude/skills/
 \```
 
 **或使用安裝腳本（推薦）：**
 
 \```demo-terminal
-$ node scripts/install-skill.mjs dbt-model-scaffold
-✓ Installed to ~/.agents/skills/dbt-model-scaffold
-✓ Installed to ~/.claude/skills/dbt-model-scaffold
+$ node scripts/install-skill.mjs my-skill
+✓ Installed to ~/.agents/skills/my-skill
+✓ Installed to ~/.claude/skills/my-skill
 \```
 
 安裝完後，你的 agent 會自動發現並可開始使用這個 skill。
@@ -241,5 +241,5 @@ The single most important thing for Loom to get right when drafting a `skill`: *
 
 ## 9. Reference
 
-- **Existing Skill Sample:** `/skills/dbt-model-scaffold/SKILL.md` — exemplifies a full multi-step skill with demo.
+- **Existing Skill Sample:** Currently the hub's only skill is `loom`, but as the hub's own authoring assistant it's atypical and not representative as a generic example — see the structural requirements above instead.
 - Shared references (spec sections, schema, AGENTS.md, Loom): see [`docs/authoring/README.md`](./README.md) §3.5.

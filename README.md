@@ -30,14 +30,11 @@
 找到想用的資源後，使用 **`install-skill.mjs`** 腳本安裝到本機 agent：
 
 ```bash
-# 安裝單個資源
+# 安裝單個資源（把 <skill-name> 換成你在目錄網站上看到的實際資源名稱）
 node scripts/install-skill.mjs <skill-name>
-
-# 例：
-node scripts/install-skill.mjs dbt-model-scaffold
 # 輸出：
-# ✓ Installed to ~/.agents/skills/dbt-model-scaffold
-# ✓ Installed to ~/.claude/skills/dbt-model-scaffold
+# ✓ Installed to ~/.agents/skills/<skill-name>
+# ✓ Installed to ~/.claude/skills/<skill-name>
 ```
 
 如果 script 不可用，手動使用 symlink（詳見各資源頁的安裝指令）。

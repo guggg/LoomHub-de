@@ -236,18 +236,18 @@ describe("parseInstall", () => {
     expect(parseInstall(install)).toEqual([{ label: "Group", commands: ["a", "b"] }]);
   });
 
-  it("real skill fixture: postgres-mcp-server's multi-vendor install block", () => {
+  it("realistic mcp-server fixture: multi-vendor install block", () => {
     const install = [
       "## 安裝 / Install",
       "",
       "```demo-terminal",
       "# Codex + Gemini（共用 ~/.agents/skills）",
-      '$ ln -s "$PWD/skills/postgres-mcp-server" ~/.agents/skills/postgres-mcp-server',
+      '$ ln -s "$PWD/skills/my-mcp-server" ~/.agents/skills/my-mcp-server',
       "# Claude Code",
-      '$ ln -s "$PWD/skills/postgres-mcp-server" ~/.claude/skills/postgres-mcp-server',
+      '$ ln -s "$PWD/skills/my-mcp-server" ~/.claude/skills/my-mcp-server',
       "# 若該 agent 不支援 symlink，改用 copy 作為 fallback（兩處都裝）",
-      "$ cp -R skills/postgres-mcp-server ~/.agents/skills/",
-      "$ cp -R skills/postgres-mcp-server ~/.claude/skills/",
+      "$ cp -R skills/my-mcp-server ~/.agents/skills/",
+      "$ cp -R skills/my-mcp-server ~/.claude/skills/",
       "```",
       "",
     ].join("\n");
