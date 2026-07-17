@@ -131,6 +131,9 @@ node scripts/install-skill.mjs code-review-pr
    - 怎麼瀏覽 / 安裝資產——目錄網站 + `node scripts/install-skill.mjs <name>`。
    - 分享機制怎麼運作——之後在任何專案協作時，若偵測到值得沈澱的工作會主動問一句；同意後
      Loom 依 hub 格式起草、跑自檢、**直接 commit + push，免 PR**。
+   - 怎麼查有沒有更新——hub 更新是拉取式、無主動推播（見 FR-6.2），使用者要自己想到查。
+     在本機 clone 裡跑 `node scripts/check-updates.mjs`，會比對已安裝 skill 的版本、列出
+     hub 上新出現的資源，也會提醒本機有沒有改動忘了回流。
    - Authoring guide 在哪裡——`docs/authoring/`（依資源類型：prompt / skill / mcp-server / workflow）。
 
 **注意事項（給 agent）：**
