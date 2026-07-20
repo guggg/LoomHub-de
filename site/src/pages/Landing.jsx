@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Fuse from "fuse.js";
 import { useCatalog } from "../data.js";
 import { useTheme } from "../useTheme.js";
@@ -13,8 +14,12 @@ const EMPTY = { type: [], category: [], tags: [] };
 export default function Landing() {
   const { loading, error, index } = useCatalog();
   const [theme, toggleTheme] = useTheme();
+  const [searchParams] = useSearchParams();
   const [search, setSearch] = useState("");
-  const [selected, setSelected] = useState(EMPTY);
+  const [selected, setSelected] = useState(() => {
+    const tag = searchParams.get("tag");
+    return tag ? { ...EMPTY, tags: [tag] } : EMPTY;
+  });
   const [sortBy, setSortBy] = useState(DEFAULT_SORT);
 
   // Fuse over name / description / tags (Spec §7.2.1).

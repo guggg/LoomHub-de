@@ -275,6 +275,9 @@ button {
   border-radius: var(--radius-sm);
   padding: 1px 6px;
 }
+.card-tag:hover {
+  text-decoration: underline;
+}
 .card-foot {
   display: flex;
   justify-content: space-between;
@@ -294,7 +297,7 @@ button {
 
 /* ---- Detail page ---------------------------------------------------------- */
 .detail {
-  max-width: 860px;
+  max-width: 1080px;
   margin: 0 auto;
   padding: var(--sp-5);
 }
@@ -302,6 +305,24 @@ button {
   display: inline-block;
   margin-bottom: var(--sp-4);
   font-size: 14px;
+}
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: var(--sp-5);
+}
+.detail-sidebar {
+  align-self: start;
+  position: sticky;
+  top: 78px;
+}
+@media (max-width: 760px) {
+  .detail-layout {
+    grid-template-columns: 1fr;
+  }
+  .detail-sidebar {
+    position: static;
+  }
 }
 .detail-header h1 {
   margin: 0 0 var(--sp-2);
