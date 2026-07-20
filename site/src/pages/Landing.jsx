@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import Fuse from "fuse.js";
 import { useCatalog } from "../data.js";
 import { useTheme } from "../useTheme.js";
+import { SORT_OPTIONS, DEFAULT_SORT, sortSkills } from "../sort.js";
 import Header from "../components/Header.jsx";
 import Sidebar from "../components/Sidebar.jsx";
 import Card from "../components/Card.jsx";
@@ -14,6 +15,7 @@ export default function Landing() {
   const [theme, toggleTheme] = useTheme();
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(EMPTY);
+  const [sortBy, setSortBy] = useState(DEFAULT_SORT);
 
   // Fuse over name / description / tags (Spec §7.2.1).
   const fuse = useMemo(
@@ -45,9 +47,15 @@ export default function Landing() {
     (!selected.category.length || selected.category.includes(sk.category)) &&
     (!selected.tags.length || selected.tags.every((t) => sk.tags?.includes(t)));
 
-  const results = useMemo(
+  const filtered = useMemo(
     () => searched.filter(matchesFilters),
     [searched, selected]
+  );
+
+  // 3) sort last, after search + filter (Spec: sort applies to final list).
+  const results = useMemo(
+    () => sortSkills(filtered, sortBy),
+    [filtered, sortBy]
   );
 
   // hit counts per value, computed on the search-filtered set (before facet
@@ -100,7 +108,23 @@ export default function Landing() {
           {!loading && !error && (
             <>
               <div className="results-meta">
-                {results.length} / {index.length} 個項目
+                <span>
+                  {results.length} / {index.length} 個項目
+                </span>
+                <label className="sort-select">
+                  排序
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    aria-label="排序方式"
+                  >
+                    {SORT_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
               </div>
               {results.length === 0 ? (
                 <div className="empty-state">
