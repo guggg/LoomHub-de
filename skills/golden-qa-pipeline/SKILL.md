@@ -123,6 +123,17 @@ Run tiers in parallel (one agent call per tier), and give each generation call:
 Generation requirements:
 - `evidence_quote` MUST be a verbatim quote from the source — never flatten tables into
   prose, never paraphrase, never splice non-contiguous sentences together
+- **Structured sources (HTML/markdown tables, mermaid flowcharts) are the highest-risk case
+  for a "disassemble-and-reassemble" hallucination**: the model pulls out a table's column
+  headers (e.g. `Policy` / `Description`) and cell values, then splices them into a fake
+  verbatim sentence like `"Policy: X, Description: Y"` — or strips a mermaid node's bracket
+  syntax and node IDs, reflowing the text into plain prose. Neither is a verbatim quote; both
+  are rewrites. Table sources must keep the original `<tr><td>` / `|` markup (including the
+  header row, see next bullet); flowchart sources must keep node syntax (`N1["..."]`,
+  `N1-->N2`) — never leave only the "human-readable translation."
+- For table sources, quoting the data row alone is NOT enough — cells are often bare symbols
+  or short values with no context on what column they belong to. Always include the header
+  row alongside the data row (at minimum two lines: header + data).
 - For L8, `evidence_quote` must be tagged per source file (e.g. `[File A] quote...`
   `[File B] quote...`) — cross-document comparison questions are the ones most likely to
   misattribute a rule from file A to file B, and per-file tagging makes that catchable
@@ -150,6 +161,17 @@ Common hallucination patterns to watch for (empirically observed):
   "per semester" when the source gave no time period)
 - Misjudging refusal — treating a question the knowledge base CAN actually answer as
   "no data available"
+
+**Verification blind spot (empirically confirmed — Opus misses this too):** when Opus checks
+derivable/answer_accurate, it tends to validate whether the ANSWER content is correct but
+does not byte-for-byte diff the `evidence_quote` against the source. The "table/flowchart
+disassembled into a fake verbatim sentence" pattern above slips through this check precisely
+because the answer content is usually correct (it was transcribed from the real cell values)
+— only a literal comparison of `evidence_quote` against the source text reveals the fabricated
+formatting. When the source document contains tables or flowcharts, the verification prompt
+must explicitly add: "check whether `evidence_quote` is a verbatim copy in the source's own
+markup (including structural tokens like `<td>`/`|`/`N1["..."]`), not a plain-language
+paraphrase of the same content."
 
 ## STAGE 5 — Assemble the frozen dataset
 1. Discard all `reject` questions.
