@@ -336,7 +336,7 @@ describe("toIndexEntry", () => {
 // ---------------------------------------------------------------------------
 describe("whitelists match the schema contract", () => {
   it("TYPE_WHITELIST matches schema/skill.schema.json's type enum", () => {
-    expect(TYPE_WHITELIST).toEqual(["skill", "prompt", "mcp-server", "workflow"]);
+    expect(TYPE_WHITELIST).toEqual(["skill", "prompt", "mcp-server", "workflow", "tool"]);
   });
 
   it("CATEGORY_WHITELIST matches schema/skill.schema.json's category enum", () => {

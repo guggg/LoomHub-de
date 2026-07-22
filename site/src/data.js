@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 // Whitelists mirror Spec §4.1 / §4.2 (and schema/skill.schema.json). Kept here
 // so filters always show the full, ordered value set even if some values have
 // zero skills yet.
-export const TYPE_WHITELIST = ["skill", "prompt", "mcp-server", "workflow"];
-export const TYPE_EMOJI = { skill: "🔧", prompt: "📝", "mcp-server": "🔌", workflow: "🔀" };
+export const TYPE_WHITELIST = ["skill", "prompt", "mcp-server", "workflow", "tool"];
+export const TYPE_EMOJI = { skill: "🔧", prompt: "📝", "mcp-server": "🔌", workflow: "🔀", tool: "🧰" };
 export const CATEGORY_WHITELIST = [
   "requirements",
   "design",

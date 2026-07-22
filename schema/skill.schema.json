@@ -33,7 +33,8 @@
         "skill",
         "prompt",
         "mcp-server",
-        "workflow"
+        "workflow",
+        "tool"
       ]
     },
     "category": {
