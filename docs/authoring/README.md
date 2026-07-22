@@ -1,10 +1,10 @@
 # 撰寫指引 / Authoring Guides
 
 > 這是 LoomHub-de 各 type 撰寫指引的入口，也是**共用規則的單一來源**——frontmatter 8 欄位、
-> 貢獻者檢核清單的共用項、Loom 如何使用這些指南、參考連結，都定義在本檔（§3）。四份
+> 貢獻者檢核清單的共用項、Loom 如何使用這些指南、參考連結，都定義在本檔（§3）。五份
 > `*-guide.md`（[skill](./skill-guide.md) / [prompt](./prompt-guide.md) / [mcp-server](./mcp-server-guide.md) /
-> [workflow](./workflow-guide.md)）只放**該 type 專屬**的正文結構要求與範例，開頭皆註明
-> 「共用規則見本檔」，不重複維護同一段文字。
+> [workflow](./workflow-guide.md) / [tool](./tool-guide.md)）只放**該 type 專屬**的正文結構要求與範例，
+> 開頭皆註明「共用規則見本檔」，不重複維護同一段文字。
 >
 > **不知道你的東西該分成哪一類？先看下方「§1 決策指引」。** 決定好 type 後，再點 §3.4 對應的
 > 指引照著寫該 type 專屬的部分。
@@ -15,7 +15,7 @@
 
 ## 1. 我該分成哪一類? / Which type is this?
 
-先用一句話認識四種 type:
+先用一句話認識五種 type:
 
 | type | 一句話 | 誰在對的時機把它拿出來用 | 取用方式 |
 |---|---|---|---|
@@ -23,10 +23,17 @@
 | **`prompt`** | 一段可重用的文字範本,**人手動**複製填空貼上 | 人 | 複製本文 |
 | **`mcp-server`** | 可掛載的工具伺服器（設定 + 說明），讓 agent 多出一批工具 | Agent（掛載後） | 安裝 / 啟動 |
 | **`workflow`** | 方法論 / 規範,描述「該怎麼做」而非可執行的能力體 | 人（自檢時參照）或 agent（審查時參照） | 複製套用（永遠） |
+| **`tool`** | 完全外部、獨立的工具 / CLI / app / 服務,本身非可安裝進 agent 的內容,也非可複製的文字範本 | 人（自行前往使用） | 連結 / 前往 |
 
 ### 決策流程（照順序問自己）
 
 ```
+0. 它是「完全外部、獨立存在的工具 / CLI / app / 服務」——不是要裝進 agent，
+   也不是一段給人複製貼上的文字，只是想收藏一個連結供團隊參考嗎？
+      （例如一個 npm CLI、桌面 app、託管服務——https://github.com/langchain-ai/openwiki 這類）
+   ── 是 ──▶  type: tool
+   ── 否 ──▶ 往下
+
 1. 它是「可被 agent 掛載、提供一批工具/資源的伺服器」嗎？
       （例如 Postgres 查詢、GitHub API、內部服務的 MCP server）
    ── 是 ──▶  type: mcp-server
@@ -44,6 +51,7 @@
 ```
 
 一句話版：
+- **完全外部、獨立的工具/服務，只是收藏連結** → `tool`
 - **要 agent 自動用、執行後產出結果** → `skill`（不論內部步驟多寡）
 - **是方法論 / 標準，用來參照、對照著做，本身不被執行** → `workflow`（不論一人或多人）
 - **人手動貼的文字** → `prompt`
@@ -72,14 +80,15 @@
 | 「建 RAG 知識庫」的配方 | `skill`（若是可執行的建置腳本/步驟）或 `workflow`（若是「怎樣才算建得好」的方法論/品質標準），見 spec §4.1 | 執行它會不會直接產出知識庫？會 → skill；只是拿來對照品質的標準 → workflow |
 | 一段固定的 prompt 範本（含變數） | `prompt` | 單步、手動填空 |
 | 連到某服務、給 agent 一批工具 | `mcp-server` | 掛載工具伺服器 |
+| 想收藏一個外部 npm CLI / app / 服務，本身不是文字、也裝不進 agent | `tool` | 只是連結 + 簡述，人自行前往使用 |
 
-> 想更深入理解四者的本質差別（哪條線是「真的」、哪條是分類方便），可問 Loom 或看團隊討論記錄。
+> 想更深入理解五者的本質差別（哪條線是「真的」、哪條是分類方便），可問 Loom 或看團隊討論記錄。
 
 ---
 
 ## 3. 共用規範 / Shared Rules（單一來源）
 
-以下內容適用**所有四種 type**，各 `*-guide.md` 不重複維護，只放連結。
+以下內容適用**所有五種 type**，各 `*-guide.md` 不重複維護，只放連結。
 
 ### 3.1 Frontmatter 8 欄位（Spec §3.1）
 
@@ -89,7 +98,7 @@
 |---|---|
 | `name` | kebab-case, ≤ 64 chars, 等於資料夾名 |
 | `description` | 做什麼 + 何時用；關鍵字豐富；≤ 1024 chars |
-| `type` | `skill` / `prompt` / `mcp-server` / `workflow` 之一（見 §1） |
+| `type` | `skill` / `prompt` / `mcp-server` / `workflow` / `tool` 之一（見 §1） |
 | `category` | `requirements` / `design` / `development` / `testing` / `ops` / `docs` / `research` / `general` 之一（Spec §4.2） |
 | `tags` | 自由標籤陣列，小寫 kebab-case（例：`[etl, airflow, oncall]`） |
 | `version` | semver，新資源從 `0.1.0` 起 |
@@ -130,6 +139,7 @@ Loom（`/skills/loom/SKILL.md`）起草任何 type 的資源時：
 - **[prompt-guide.md](./prompt-guide.md)** — `type: prompt`：變數/參數、範例輸出（必須對應本文）、複製取用
 - **[mcp-server-guide.md](./mcp-server-guide.md)** — `type: mcp-server`：提供的工具/資源、設定 Config（含 secret 安全）、安裝啟動
 - **[workflow-guide.md](./workflow-guide.md)** — `type: workflow`：適用原則 / 各階段標準、前置條件、取用 / 套用（永遠）
+- **[tool-guide.md](./tool-guide.md)** — `type: tool`：完全外部的工具/服務，末節為連結 / 前往（非安裝、非複製）
 
 ### 3.5 參考連結（共用）
 

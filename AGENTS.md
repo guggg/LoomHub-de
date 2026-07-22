@@ -26,6 +26,7 @@
 | `prompt` | reusable prompt template |
 | `mcp-server` | mountable MCP tool server (config + docs) |
 | `workflow` | methodology / standard describing HOW work should be done — referenced/followed, not executed to produce a result |
+| `tool` | fully external, standalone tool/CLI/app/service — not agent-installable content, not copyable text; referenced by link only |
 
 (RAG / knowledge-base assets use `skill` or `workflow` with `tags: [rag, kb, …]` — there is no separate `kb-template` type.)
 

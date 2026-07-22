@@ -41,7 +41,7 @@ Loom 是貢獻流程的起點：一個把「當前工作沈澱成可重用 skill
 
 **起草（§9.2）**
 - 你同意後，Loom **讀取本機 clone 的** `schema/skill.schema.json` 與本 spec §3 正文小節規範，據此起草：
-  - **先判斷 `type`**：依 `docs/authoring/README.md` §1 的決策流程（掛載工具伺服器→mcp-server；人手動貼的文字→prompt；執行後直接產出結果的能力，不論內部步驟多寡→skill；描述「該怎麼做」的方法論/標準，本身不被執行、只被參照對照著做，不論一人或多人→workflow），選最貼近的一類。模糊時依同文件 §2「多數允許並存、選一個 + 用 tags 補 + description 寫清楚差異」處理，不卡在完美分類。**此判斷規則以 authoring/README 為單一真實來源，Loom 引用、不複製。**
+  - **先判斷 `type`**：依 `docs/authoring/README.md` §1 的決策流程（完全外部、獨立存在、非裝進 agent 也非給人複製的工具/服務→tool；掛載工具伺服器→mcp-server；人手動貼的文字→prompt；執行後直接產出結果的能力，不論內部步驟多寡→skill；描述「該怎麼做」的方法論/標準，本身不被執行、只被參照對照著做，不論一人或多人→workflow），選最貼近的一類。模糊時依同文件 §2「多數允許並存、選一個 + 用 tags 補 + description 寫清楚差異」處理，不卡在完美分類。**此判斷規則以 authoring/README 為單一真實來源，Loom 引用、不複製。**
   - 建 `skills/<new-name>/SKILL.md`，填 8 欄位 frontmatter（`version` 起始 `0.1.0`，`owner` = 當前使用者，`updated` = 今日）。
   - 產出「用途 / 使用場景 / 使用方式 / Demo / 安裝」正文小節，內容取自當前工作脈絡。
   - **Demo 以純 Markdown + §3.2.1 約定區塊**（`demo-terminal` / `demo-conversation`）撰寫，取自實際互動；**永不寫 HTML**。

@@ -5,9 +5,9 @@
 > 一節，逐步照做——不要自行翻讀原始碼、猜測安裝範圍，或憑「安裝資源到你的 Agent」小節
 > （那節是裝*hub 裡的單個資源*，不是裝*hub 本身*）自行推斷流程。
 
-**Data Engineering 團隊的 AI Agent 能力共享樞紐。** 一個集中的、版本化的資源庫，收錄可被 AI Agent 安裝並直接使用的技能、prompt 模板、MCP 工具伺服器，與描述「該怎麼做」的工作方法論。
+**Data Engineering 團隊的 AI Agent 能力共享樞紐。** 一個集中的、版本化的資源庫，收錄可被 AI Agent 安裝並直接使用的技能、prompt 模板、MCP 工具伺服器、描述「該怎麼做」的工作方法論，以及值得團隊知道的外部工具。
 
-> **英文 / English:** LoomHub-de is the DE team's hub for sharing and collecting reusable AI-agent-usable assets (skills, prompts, MCP servers, workflows) in one place.
+> **英文 / English:** LoomHub-de is the DE team's hub for sharing and collecting reusable AI-agent-usable assets (skills, prompts, MCP servers, workflows, tools) in one place.
 
 ---
 
@@ -21,7 +21,7 @@
 
 特徵：
 - 🔍 **搜尋** — 按名稱、敘述、標籤快速找資源。
-- 🏷️ **篩選** — 按類型（skill / prompt / mcp-server / workflow）、工作類別（development / ops / testing / …）、領域標籤（etl / rag / …）篩選。
+- 🏷️ **篩選** — 按類型（skill / prompt / mcp-server / workflow / tool）、工作類別（development / ops / testing / …）、領域標籤（etl / rag / …）篩選。
 - 📋 **詳情** — 點擊卡片查看完整說明、demo、使用方式。
 - 📋 **安裝** — 一鍵複製各 agent 的安裝指令（Claude Code / Codex / Gemini）。
 
@@ -43,7 +43,7 @@ node scripts/install-skill.mjs <skill-name>
 
 ### 創作新資源 / Create New Asset
 
-在日常工作中發現可重用的 skill、prompt 或 workflow？**Loom（技能製作助手）** 會主動偵測並引導你標準化成符合 hub 規範的資源：
+在日常工作中發現可重用的 skill、prompt 或 workflow？（或看到值得收藏的外部 tool？）**Loom（技能製作助手）** 會主動偵測並引導你標準化成符合 hub 規範的資源：
 
 1. **Loom 偵測** — 協作中出現重複動作、流程化工作時，Loom 會提議「把這個做成 hub 資源嗎？」
 2. **同意後起草** — Loom 產出初稿 (`SKILL.md`)，包含必要的結構、frontmatter、demo。
@@ -105,14 +105,14 @@ node scripts/install-skill.mjs <skill-name>
    - 絕不覆蓋界標以外、使用者自己寫的其他內容。
 
 5. **給導覽介紹**（對話式、不是貼一大段文件）。用自己的話向使用者說明：
-   - LoomHub-de 是什麼——團隊的 AI Agent 資產中心（skill / prompt / mcp-server / workflow）。
+   - LoomHub-de 是什麼——團隊的 AI Agent 資產中心（skill / prompt / mcp-server / workflow / tool）。
    - 怎麼瀏覽 / 安裝資產——目錄網站 + `node scripts/install-skill.mjs <name>`。
    - 分享機制怎麼運作——之後在任何專案協作時，若偵測到值得沈澱的工作會主動問一句；同意後
      Loom 依 hub 格式起草、跑自檢、**直接 commit + push，免 PR**。
    - 怎麼查有沒有更新——hub 更新是拉取式、無主動推播（見 FR-6.2），使用者要自己想到查。
      在本機 clone 裡跑 `node scripts/check-updates.mjs`，會比對已安裝 skill 的版本、列出
      hub 上新出現的資源，也會提醒本機有沒有改動忘了回流。
-   - Authoring guide 在哪裡——`docs/authoring/`（依資源類型：prompt / skill / mcp-server / workflow）。
+   - Authoring guide 在哪裡——`docs/authoring/`（依資源類型：prompt / skill / mcp-server / workflow / tool）。
 
 **注意事項（給 agent）：**
 - 步驟 1、3、4 都是**互動式**，不可自行假設答案跳過。
@@ -125,7 +125,7 @@ node scripts/install-skill.mjs <skill-name>
 
 ## 資源結構 / Asset Types
 
-Hub 收錄 4 種資源類型，各有不同的安裝方式與用途：
+Hub 收錄 5 種資源類型，各有不同的安裝方式與用途：
 
 | 類型 | 是什麼 | 使用方式 | 安裝 |
 |---|---|---|---|
@@ -133,6 +133,7 @@ Hub 收錄 4 種資源類型，各有不同的安裝方式與用途：
 | **prompt** | 可複製的 prompt 範本 | 複製、填變數、貼給 agent | 無（純文字） |
 | **mcp-server** | 掛在 agent 的工具伺服器 + 設定 | Agent 透過 MCP 呼叫工具 | 註冊到 MCP 設定 + 啟動 server |
 | **workflow** | 方法論 / 標準，描述「該怎麼做」而非可執行的能力體 | 人（自檢時參照）或 agent（審查時參照） | 複製套用（永遠，不安裝） |
+| **tool** | 完全外部、獨立的工具 / CLI / app / 服務 | 人前往外部專案自行使用 | 不適用，純連結 |
 
 詳細說明見各類型的 authoring guide。
 
@@ -153,7 +154,8 @@ LoomHub-de/
 │       ├── prompt-guide.md
 │       ├── skill-guide.md
 │       ├── mcp-server-guide.md
-│       └── workflow-guide.md
+│       ├── workflow-guide.md
+│       └── tool-guide.md
 ├── skills/                        # ★ 所有資源的單一真實來源
 │   ├── <resource-name>/
 │   │   ├── SKILL.md               # 資源說明、frontmatter、使用方式、demo
@@ -223,7 +225,7 @@ npm test
 1. **新增資源資料夾**：在 `skills/` 下建 `<skill-name>/` 資料夾（kebab-case）。
 2. **寫 `SKILL.md`**：
    - 按 frontmatter 規範填 8 個欄位。
-   - 依資源類型（skill / prompt / mcp-server / workflow）按對應 authoring guide 寫內容。
+   - 依資源類型（skill / prompt / mcp-server / workflow / tool）按對應 authoring guide 寫內容。
 3. **本機檢核**：對新資源執行 AGENTS.md 裡的檢核清單（或用 Loom 自動檢核）。
 4. **提交**：`git add + commit + push` 到主線（免 PR；直接 push 且無閘門）。
 5. **目錄更新**：CI 自動跑 `build-index` + `vite build` + 部署到 GitHub Pages。
@@ -249,6 +251,7 @@ npm test
 - **skill** → `/docs/authoring/skill-guide.md`
 - **mcp-server** → `/docs/authoring/mcp-server-guide.md`
 - **workflow** → `/docs/authoring/workflow-guide.md`
+- **tool** → `/docs/authoring/tool-guide.md`
 
 每份指南詳解該類型的結構、demo 寫法、檢核清單。
 

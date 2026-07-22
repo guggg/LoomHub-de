@@ -76,7 +76,7 @@ describe("Landing sort control", () => {
   it("groups by type (skill before prompt per TYPE_WHITELIST), name asc within group", async () => {
     await renderLanding();
     fireEvent.change(screen.getByLabelText("排序方式"), { target: { value: "type" } });
-    // TYPE_WHITELIST = ["skill", "prompt", "mcp-server", "workflow"]
+    // TYPE_WHITELIST = ["skill", "prompt", "mcp-server", "workflow", "tool"]
     expect(cardNames()).toEqual(["middle-skill", "zeta-skill", "alpha-prompt"]);
   });
 
