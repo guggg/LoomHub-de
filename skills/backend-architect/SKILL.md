@@ -4,9 +4,9 @@ description: 安裝進 agent 的後端系統架構設計能力——涵蓋服務
 type: skill
 category: design
 tags: [backend, architecture, api-design, microservices, database-design, reliability]
-version: 0.1.0
-owner: "@GivorsHandsomeBoy"
-updated: 2026-07-17
+version: 0.1.1
+owner: "@Ty"
+updated: 2026-07-23
 source: https://github.com/msitarzewski/agency-agents/blob/main/engineering/engineering-backend-architect.md
 license: MIT
 ---

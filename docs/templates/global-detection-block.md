@@ -7,8 +7,10 @@
 > 所選各廠商的**全域**指令檔（`~/.claude/CLAUDE.md` / `~/.codex/AGENTS.md` / `~/.gemini/GEMINI.md`），
 > 讓 agent 在任何專案的任何 session 都主動留意可沈澱成 hub 資產的工作。
 >
-> `{{REPO_PATH}}` 為變數 placeholder，注入時換成使用者實際的本機 clone 路徑；文字其餘部分逐字使用，
-> 不改寫用語。合併規則（界標冪等）見引用處的說明，本檔只放文字本身。
+> `{{REPO_PATH}}` 與 `{{OWNER_HANDLE}}` 為變數 placeholder：注入時 `{{REPO_PATH}}` 換成使用者實際的
+> 本機 clone 路徑，`{{OWNER_HANDLE}}` 換成使用者在安裝時**親口指定**的署名（如 `@Ty`）——安裝流程
+> **必須先問使用者要用什麼名稱署名、等到回答**，不可從 OS 使用者名稱或 git config 自行推斷。文字其餘
+> 部分逐字使用，不改寫用語。合併規則（界標冪等）見引用處的說明，本檔只放文字本身。
 
 ```markdown
 <!-- LoomHub-de:start -->
@@ -16,6 +18,7 @@
 
 LoomHub-de 是團隊的 AI Agent 資產中心（skill / prompt / mcp-server / workflow）。
 本機 repo 路徑：{{REPO_PATH}}
+我在 LoomHub-de 分享資產時的署名（`owner` 欄一律填這個，切勿改用 OS 使用者名稱或自行猜測）：{{OWNER_HANDLE}}
 
 在與我協作的過程中，若察覺當前工作**可能值得沈澱成可重用資產**——出現這些訊號時：
 - 同一類操作重複做了幾次
