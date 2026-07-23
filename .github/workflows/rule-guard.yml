@@ -1,0 +1,51 @@
+name: Rule-guard (advisory)
+
+# 軟治理提醒：偵測本次 push 到 main 是否動到「規則路徑」
+# （docs/ schema/ scripts/ AGENTS.md README.md .github/ install.sh —— 見 .github/CODEOWNERS）。
+# 這些路徑歸維護者（@Ty）維護；skills/ 是自由路徑，任何人都能改。
+#
+# 這是 advisory-only：只在 Actions log 印醒目警告，永遠 exit 0，不阻擋任何 push（本 repo
+# trust-based / no-PR，沒有 CI gate — 與 build-index.mjs / check-updates.mjs 同一風格）。
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check whether this push touched hub rule paths
+        run: |
+          set -e
+
+          BEFORE="${{ github.event.before }}"
+          AFTER="${{ github.event.after }}"
+
+          # First push to a new branch (or force-push history rewrite) may
+          # give an all-zero "before" SHA — nothing to diff against, so
+          # just skip the check rather than fail.
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            echo "[rule-guard] no previous commit to diff against — skipping."
+            exit 0
+          fi
+
+          CHANGED=$(git diff --name-only "$BEFORE" "$AFTER" -- \
+            docs/ schema/ scripts/ AGENTS.md README.md .github/ install.sh || true)
+
+          if [ -n "$CHANGED" ]; then
+            echo "::warning::⚠️  這次 push 動到了 hub 規則路徑（docs/ schema/ scripts/ AGENTS.md README.md .github/ install.sh）——這些是 hub 規則，歸 @Ty 維護。"
+            echo "以下規則檔在這次 push 被改動："
+            echo "$CHANGED" | sed 's/^/  - /'
+          else
+            echo "[rule-guard] 這次 push 只動到自由路徑（skills/ 等），沒有動到規則路徑。"
+          fi
+
+          exit 0

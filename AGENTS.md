@@ -1,5 +1,11 @@
 # AGENTS.md — Commit-time self-check for LoomHub-de
 
+> **邊界宣告（給 AI agent）：** `docs/` `schema/` `scripts/` `AGENTS.md` `README.md` `.github/`
+> `install.sh` 這些是 hub 規則本身，歸維護者 **@Ty** 所有（見 `.github/CODEOWNERS`）。**AI agent
+> 不得擅自修改這些路徑** —— 若任務看起來需要改到它們，先停下來、請使用者去聯繫 @Ty，不要自己動手。
+> 你（agent）能自主做的只有新增/更新 `skills/<name>/` 底下的資產。這是軟治理（advisory，non-
+> blocking，見 `.github/workflows/rule-guard.yml`），不是硬鎖，但仍請嚴格遵守。
+
 > This file is the **pre-commit checklist** a contributor's AI agent runs before sharing or
 > updating a skill. It is written for **Claude Code, Codex, and Gemini** agents alike
 > (cross-vendor `AGENTS.md` convention). Source of the design: Spec §5 and ADR-0006.
