@@ -9,6 +9,14 @@ owner: "@Ty"
 updated: 2026-07-23
 source: https://github.com/msitarzewski/agency-agents/blob/main/engineering/engineering-backend-architect.md
 license: MIT
+upstream:
+  type: github
+  repo: msitarzewski/agency-agents
+  track: commit
+  path: engineering/engineering-backend-architect.md
+  branch: main
+  ref: 3fd95429834795a311afef3dfe52e0f1047e5d83
+  checked_at: 2026-07-23
 ---
 
 ## 用途 / What

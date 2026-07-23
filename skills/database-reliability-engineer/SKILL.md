@@ -9,6 +9,14 @@ owner: "@Ty"
 updated: 2026-07-23
 source: https://github.com/msitarzewski/agency-agents/blob/main/engineering/engineering-database-reliability-engineer.md
 license: MIT
+upstream:
+  type: github
+  repo: msitarzewski/agency-agents
+  track: commit
+  path: engineering/engineering-database-reliability-engineer.md
+  branch: main
+  ref: 86a6695d4cee1c9720e2be4fd8ae007f9b6d96ae
+  checked_at: 2026-07-23
 ---
 
 ## 用途 / What

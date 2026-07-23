@@ -9,6 +9,14 @@ owner: "@Ty"
 updated: 2026-07-23
 source: https://github.com/msitarzewski/agency-agents/blob/main/engineering/engineering-data-engineer.md
 license: MIT
+upstream:
+  type: github
+  repo: msitarzewski/agency-agents
+  track: commit
+  path: engineering/engineering-data-engineer.md
+  branch: main
+  ref: 6d58ad4c0a3b8cfa9bb77125f18152312dd1e5bb
+  checked_at: 2026-07-23
 ---
 
 ## 用途 / What

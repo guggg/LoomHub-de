@@ -6,6 +6,8 @@ import {
   collectUpstreamCandidates,
   compareUpstreamRef,
   fetchLatestRelease,
+  fetchLatestCommit,
+  compareUpstreamCommit,
   checkHeartbeat,
   formatReport,
   dedupMarker,
@@ -81,6 +83,21 @@ describe("collectUpstreamCandidates", () => {
     const { candidates, skipped } = collectUpstreamCandidates(tmp);
     expect(skipped).toEqual([]);
     expect(candidates).toHaveLength(1);
+  });
+
+  it("picks up a well-formed github+commit candidate", () => {
+    writeSkill(
+      tmp,
+      "beta",
+      `upstream:\n  type: github\n  repo: acme/beta\n  track: commit\n  path: foo.md\n  branch: main\n  ref: ${"a".repeat(40)}\n  checked_at: "2026-01-01"\n`
+    );
+    const { candidates, skipped } = collectUpstreamCandidates(tmp);
+    expect(skipped).toEqual([]);
+    expect(candidates).toHaveLength(1);
+    expect(candidates[0]).toMatchObject({
+      name: "beta",
+      upstream: expect.objectContaining({ track: "commit", path: "foo.md", branch: "main" }),
+    });
   });
 
   it("gracefully skips type=npm (MVP: github only)", () => {
@@ -170,6 +187,39 @@ describe("compareUpstreamRef", () => {
 });
 
 // ---------------------------------------------------------------------------
+// compareUpstreamCommit — full-SHA equality + prefix tolerance
+// ---------------------------------------------------------------------------
+describe("compareUpstreamCommit", () => {
+  const shaA = "a".repeat(40);
+  const shaB = "b".repeat(40);
+
+  it("reports no update when SHAs are identical", () => {
+    expect(compareUpstreamCommit(shaA, shaA)).toEqual({ hasUpdate: false });
+  });
+
+  it("reports an update, level commit, when SHAs differ", () => {
+    expect(compareUpstreamCommit(shaA, shaB)).toEqual({ hasUpdate: true, level: "commit" });
+  });
+
+  it("treats a pinned short SHA that prefixes the latest full SHA as no update", () => {
+    const short = shaA.slice(0, 7);
+    expect(compareUpstreamCommit(short, shaA)).toEqual({ hasUpdate: false });
+  });
+
+  it("treats a latest short SHA that prefixes the pinned full SHA as no update", () => {
+    const short = shaA.slice(0, 7);
+    expect(compareUpstreamCommit(shaA, short)).toEqual({ hasUpdate: false });
+  });
+
+  it("does not treat an unrelated same-length prefix collision as a match", () => {
+    expect(compareUpstreamCommit("aaaaaaa" + "0".repeat(33), shaB)).toEqual({
+      hasUpdate: true,
+      level: "commit",
+    });
+  });
+});
+
+// ---------------------------------------------------------------------------
 // fetchLatestRelease — injected fetch, no real network
 // ---------------------------------------------------------------------------
 describe("fetchLatestRelease", () => {
@@ -203,6 +253,57 @@ describe("fetchLatestRelease", () => {
     const fetchFn = async () => ({ ok: true, status: 200, json: async () => ({}) });
     const result = await fetchLatestRelease("acme/weird", fetchFn);
     expect(result.ok).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// fetchLatestCommit — injected fetch, no real network
+// ---------------------------------------------------------------------------
+describe("fetchLatestCommit", () => {
+  it("returns ok+sha on a 2xx response with a non-empty commit array", async () => {
+    const fetchFn = async (url) => {
+      expect(url).toContain("acme/foo/commits");
+      expect(url).toContain("path=foo.md");
+      expect(url).toContain("sha=main");
+      return { ok: true, status: 200, json: async () => [{ sha: "deadbeef".padEnd(40, "0") }] };
+    };
+    const result = await fetchLatestCommit("acme/foo", "foo.md", "main", fetchFn);
+    expect(result).toEqual({ ok: true, sha: "deadbeef".padEnd(40, "0") });
+  });
+
+  it("omits the path param when path is not given", async () => {
+    const fetchFn = async (url) => {
+      expect(url).not.toContain("path=");
+      return { ok: true, status: 200, json: async () => [{ sha: "a".repeat(40) }] };
+    };
+    await fetchLatestCommit("acme/foo", undefined, "main", fetchFn);
+  });
+
+  it("omits the sha (branch) param when branch is not given", async () => {
+    const fetchFn = async (url) => {
+      expect(url).not.toContain("sha=");
+      return { ok: true, status: 200, json: async () => [{ sha: "a".repeat(40) }] };
+    };
+    await fetchLatestCommit("acme/foo", "foo.md", undefined, fetchFn);
+  });
+
+  it("returns ok:false on an empty array (e.g. path doesn't exist upstream)", async () => {
+    const fetchFn = async () => ({ ok: true, status: 200, json: async () => [] });
+    const result = await fetchLatestCommit("acme/foo", "missing.md", "main", fetchFn);
+    expect(result.ok).toBe(false);
+  });
+
+  it("returns ok:false on a non-2xx response", async () => {
+    const fetchFn = async () => ({ ok: false, status: 404 });
+    const result = await fetchLatestCommit("acme/missing", undefined, undefined, fetchFn);
+    expect(result).toEqual({ ok: false, status: 404 });
+  });
+
+  it("throws only on a network-level fetch rejection", async () => {
+    const fetchFn = async () => {
+      throw new Error("ECONNRESET");
+    };
+    await expect(fetchLatestCommit("acme/foo", "foo.md", "main", fetchFn)).rejects.toThrow("ECONNRESET");
   });
 });
 
@@ -284,6 +385,85 @@ describe("checkHeartbeat", () => {
       expect.objectContaining({ name: "cappa", level: "major" }),
     ]);
   });
+
+  it("reports a commit-tracked update via the commits API branch", async () => {
+    const pinnedSha = "a".repeat(40);
+    const latestSha = "b".repeat(40);
+    writeSkill(
+      tmp,
+      "beta",
+      `upstream:\n  type: github\n  repo: acme/beta\n  track: commit\n  path: foo.md\n  branch: main\n  ref: ${pinnedSha}\n  checked_at: "2026-01-01"\n`
+    );
+    const fetchFn = async (url) => {
+      expect(url).toContain("acme/beta/commits");
+      return { ok: true, status: 200, json: async () => [{ sha: latestSha }] };
+    };
+    const result = await checkHeartbeat(tmp, { fetchFn });
+    expect(result.updates).toEqual([
+      expect.objectContaining({
+        name: "beta",
+        ref: pinnedSha,
+        latest: latestSha.slice(0, 7),
+        latestFull: latestSha,
+        level: "commit",
+      }),
+    ]);
+    expect(result.warnings).toEqual([]);
+  });
+
+  it("reports no update when the commit-tracked pinned sha matches latest", async () => {
+    const sha = "c".repeat(40);
+    writeSkill(
+      tmp,
+      "beta",
+      `upstream:\n  type: github\n  repo: acme/beta\n  track: commit\n  ref: ${sha}\n  checked_at: "2026-01-01"\n`
+    );
+    const fetchFn = async () => ({ ok: true, status: 200, json: async () => [{ sha }] });
+    const result = await checkHeartbeat(tmp, { fetchFn });
+    expect(result.updates).toEqual([]);
+  });
+
+  it("turns a commit-tracked API failure into a warning, not a thrown error", async () => {
+    writeSkill(
+      tmp,
+      "beta",
+      `upstream:\n  type: github\n  repo: acme/beta\n  track: commit\n  ref: ${"a".repeat(40)}\n  checked_at: "2026-01-01"\n`
+    );
+    const fetchFn = async () => ({ ok: false, status: 500 });
+    const result = await checkHeartbeat(tmp, { fetchFn });
+    expect(result.updates).toEqual([]);
+    expect(result.warnings.length).toBe(1);
+    expect(result.warnings[0]).toContain("500");
+  });
+
+  it("handles a mix of release-tracked and commit-tracked candidates together", async () => {
+    const pinnedSha = "a".repeat(40);
+    const latestSha = "b".repeat(40);
+    writeSkill(
+      tmp,
+      "rel",
+      `upstream:\n  type: github\n  repo: acme/rel\n  ref: v1.0.0\n  checked_at: "2026-01-01"\n`
+    );
+    writeSkill(
+      tmp,
+      "cmt",
+      `upstream:\n  type: github\n  repo: acme/cmt\n  track: commit\n  ref: ${pinnedSha}\n  checked_at: "2026-01-01"\n`
+    );
+    const fetchFn = async (url) => {
+      if (url.includes("acme/rel")) {
+        return { ok: true, status: 200, json: async () => ({ tag_name: "v1.1.0" }) };
+      }
+      return { ok: true, status: 200, json: async () => [{ sha: latestSha }] };
+    };
+    const result = await checkHeartbeat(tmp, { fetchFn });
+    expect(result.updates).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "rel", level: "minor" }),
+        expect.objectContaining({ name: "cmt", level: "commit" }),
+      ])
+    );
+    expect(result.updates).toHaveLength(2);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -341,6 +521,33 @@ describe("issue construction", () => {
     expect(body).toContain("compare/v1.0.0...v1.1.0");
     expect(body).toContain("@ty");
     expect(body).toContain("只偵測不自動套用");
+  });
+});
+
+describe("issue construction — commit-tracked updates", () => {
+  const pinnedSha = "a".repeat(40);
+  const latestSha = "b".repeat(40);
+  const update = {
+    name: "cmt",
+    repo: "acme/cmt",
+    ref: pinnedSha,
+    latest: latestSha.slice(0, 7),
+    latestFull: latestSha,
+    level: "commit",
+    checkedAt: "2026-01-01",
+    sourceUrl: "https://github.com/acme/cmt",
+    owner: "@ty",
+  };
+
+  it("title shows the short (7-char) pinned sha, not the full 40-char sha", () => {
+    const title = buildIssueTitle(update);
+    expect(title).toContain(pinnedSha.slice(0, 7));
+    expect(title).not.toContain(pinnedSha);
+  });
+
+  it("body's compare link uses the full 40-char SHAs, not the short display form", () => {
+    const body = buildIssueBody(update);
+    expect(body).toContain(`compare/${pinnedSha}...${latestSha}`);
   });
 });
 

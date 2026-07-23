@@ -16,13 +16,19 @@
  *
  * MVP scope (anything else is gracefully skipped + reported, never fatal):
  *   - `upstream.type: github` only (npm / url left to a future iteration).
- *   - `upstream.track: release` only (tag / commit left to a future
- *     iteration).
- *   - Compares `upstream.ref` (what we pinned) against the repo's latest
- *     GitHub Release tag_name. semver-parseable on both sides → major/
- *     minor/patch level via the same comparator as check-updates.mjs;
- *     otherwise "the strings differ" is still reported, just with
- *     level "unknown".
+ *   - `upstream.track: release` — compares `upstream.ref` (what we pinned)
+ *     against the repo's latest GitHub Release tag_name. semver-parseable
+ *     on both sides → major/minor/patch level via the same comparator as
+ *     check-updates.mjs; otherwise "the strings differ" is still reported,
+ *     just with level "unknown".
+ *   - `upstream.track: commit` — for upstream repos that never cut
+ *     releases/tags (just push to a branch). `upstream.ref` is the full
+ *     40-char commit SHA we last pulled; compares it against the latest
+ *     commit touching `upstream.path` (or the whole repo if `path` is
+ *     omitted) on `upstream.branch` (or the upstream default branch if
+ *     omitted). Level is always "commit" — a SHA has no major/minor/patch.
+ *   - `upstream.track: tag` is left to a future iteration (gracefully
+ *     skipped, same as an unsupported `type`).
  *
  * Usage:
  *   node scripts/heartbeat.mjs             # scan + open/dedup issues
@@ -61,7 +67,7 @@ function stripV(s) {
 
 /**
  * Scan skills/<name>/SKILL.md and split into:
- *   - candidates: eligible for the MVP github+release check.
+ *   - candidates: eligible for the MVP github+release or github+commit check.
  *   - skipped: { name, reason } for anything gracefully out of scope
  *     (no `upstream` field, unsupported type/track, missing repo/ref, or
  *     unreadable/unparsable frontmatter).
@@ -72,6 +78,8 @@ export function collectUpstreamCandidates(repoRoot) {
   const names = listLocalSkillNames(repoRoot);
   const candidates = [];
   const skipped = [];
+
+  const SUPPORTED_TRACKS = ["release", "commit"];
 
   for (const name of names) {
     const raw = readLocalSkillMd(repoRoot, name);
@@ -109,10 +117,10 @@ export function collectUpstreamCandidates(repoRoot) {
       continue;
     }
     const track = upstream.track ?? "release";
-    if (track !== "release") {
+    if (!SUPPORTED_TRACKS.includes(track)) {
       skipped.push({
         name,
-        reason: `upstream.track "${track}" not supported yet (MVP: release only)`,
+        reason: `upstream.track "${track}" not supported yet (MVP: ${SUPPORTED_TRACKS.join(" / ")})`,
       });
       continue;
     }
@@ -129,7 +137,7 @@ export function collectUpstreamCandidates(repoRoot) {
       name,
       owner: fm.owner ?? null,
       sourceUrl: fm.source ?? null,
-      upstream,
+      upstream: { ...upstream, track },
     });
   }
 
@@ -188,6 +196,55 @@ export function compareUpstreamRef(ref, latestTag) {
 }
 
 /**
+ * GET /repos/{repo}/commits?path=&sha=&per_page=1 — the latest commit that
+ * touched `path` (whole-repo latest commit if `path` omitted) on `branch`
+ * (upstream's default branch if `branch` omitted; we deliberately don't do
+ * an extra API call to resolve the default branch name — MVP simplicity).
+ *
+ * Returns:
+ *   { ok: true, sha }       on 2xx with a non-empty commit array
+ *   { ok: false, status }   on any non-2xx, and also on a 2xx-but-empty
+ *                            array (e.g. `path` doesn't exist upstream) —
+ *                            same shape either way, `reason` set for the
+ *                            latter so warnings stay descriptive.
+ * Throws only on network-level failure (fetchFn itself rejects) — mirrors
+ * fetchLatestRelease's contract.
+ */
+export async function fetchLatestCommit(repo, path, branch, fetchFn, token) {
+  const params = new URLSearchParams({ per_page: "1" });
+  if (path) params.set("path", path);
+  if (branch) params.set("sha", branch);
+
+  const res = await fetchFn(`https://api.github.com/repos/${repo}/commits?${params}`, {
+    headers: ghHeaders(token),
+  });
+  if (!res.ok) {
+    return { ok: false, status: res.status };
+  }
+  const json = await res.json();
+  if (!Array.isArray(json) || json.length === 0 || typeof json[0]?.sha !== "string") {
+    return { ok: false, status: res.status, reason: "no commits found (bad path/branch?)" };
+  }
+  return { ok: true, sha: json[0].sha };
+}
+
+/**
+ * Compare a pinned commit SHA against the latest upstream SHA. `ref` is
+ * allowed to be a prefix of `latestSha` (or vice versa — e.g. a short SHA
+ * pinned by hand) — full match either direction counts as "no update".
+ * Any other difference is an update; level is always "commit" (a SHA
+ * carries no major/minor/patch semantics).
+ */
+export function compareUpstreamCommit(ref, latestSha) {
+  if (typeof ref === "string" && typeof latestSha === "string") {
+    if (ref === latestSha || latestSha.startsWith(ref) || ref.startsWith(latestSha)) {
+      return { hasUpdate: false };
+    }
+  }
+  return { hasUpdate: true, level: "commit" };
+}
+
+/**
  * Core check (Spec MVP). Never throws — a single candidate's API failure
  * becomes a `warnings` entry and the loop continues (check-updates.mjs
  * contract). `deps.fetchFn` defaults to global fetch; `deps.token` is an
@@ -204,6 +261,42 @@ export async function checkHeartbeat(repoRoot, deps = {}) {
 
   for (const c of candidates) {
     const { name, upstream } = c;
+
+    if (upstream.track === "commit") {
+      let result;
+      try {
+        result = await fetchLatestCommit(upstream.repo, upstream.path, upstream.branch, fetchFn, token);
+      } catch (err) {
+        warnings.push(`${name}: GitHub commits API call for ${upstream.repo} failed: ${err.message}`);
+        continue;
+      }
+      if (!result.ok) {
+        warnings.push(
+          `${name}: GitHub commits API for ${upstream.repo} returned HTTP ${result.status}${
+            result.reason ? ` (${result.reason})` : ""
+          } — skipped`
+        );
+        continue;
+      }
+
+      const cmp = compareUpstreamCommit(upstream.ref, result.sha);
+      if (cmp.hasUpdate) {
+        updates.push({
+          name,
+          repo: upstream.repo,
+          ref: upstream.ref,
+          latest: result.sha.slice(0, 7),
+          latestFull: result.sha,
+          level: cmp.level,
+          checkedAt: upstream.checked_at ?? null,
+          sourceUrl: c.sourceUrl,
+          owner: c.owner,
+        });
+      }
+      continue;
+    }
+
+    // track === "release"
     let result;
     try {
       result = await fetchLatestRelease(upstream.repo, fetchFn, token);
@@ -249,7 +342,10 @@ export function formatReport(result) {
   if (updates.length) {
     lines.push("偵測到上游更新：");
     for (const u of updates) {
-      lines.push(`  [update] ${u.name}: ${u.ref} -> ${u.latest} (${u.level}) [${u.repo}]`);
+      // Commit-tracked refs are full 40-char SHAs — show the short (7-char)
+      // form for readability; `u.latest` is already short in that case.
+      const ref = u.level === "commit" ? u.ref.slice(0, 7) : u.ref;
+      lines.push(`  [update] ${u.name}: ${ref} -> ${u.latest} (${u.level}) [${u.repo}]`);
     }
   } else {
     lines.push("沒有偵測到上游更新。");
@@ -280,11 +376,19 @@ export function dedupMarker(name) {
 }
 
 export function buildIssueTitle(u) {
-  return `[heartbeat] ${u.name}:上游更新 ${u.ref} → ${u.latest} (${u.level})`;
+  // Commit-tracked refs are full 40-char SHAs — unreadable in a title, so
+  // show the short (7-char) form there. `u.latest` is already short (see
+  // checkHeartbeat's commit branch); the full SHA is preserved separately
+  // as `u.latestFull` for the compare link in buildIssueBody.
+  const ref = u.level === "commit" ? u.ref.slice(0, 7) : u.ref;
+  return `[heartbeat] ${u.name}:上游更新 ${ref} → ${u.latest} (${u.level})`;
 }
 
 export function buildIssueBody(u) {
-  const compareUrl = `https://github.com/${u.repo}/compare/${u.ref}...${u.latest}`;
+  // For commit-tracked updates, GitHub's compare view needs full SHAs (not
+  // the truncated 7-char display form) to resolve unambiguously.
+  const compareTo = u.level === "commit" ? u.latestFull ?? u.latest : u.latest;
+  const compareUrl = `https://github.com/${u.repo}/compare/${u.ref}...${compareTo}`;
   const lines = [
     dedupMarker(u.name),
     "",
