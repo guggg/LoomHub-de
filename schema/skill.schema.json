@@ -80,6 +80,47 @@
     "license": {
       "type": "string",
       "description": "OPTIONAL. License of the original asset when collected externally (e.g. MIT, Apache-2.0, or the original author's terms). Omit for team-original assets."
+    },
+    "upstream": {
+      "type": "object",
+      "description": "OPTIONAL. 結構化上游追蹤(heartbeat 用)。缺席=不追蹤,heartbeat 跳過。",
+      "required": ["type", "checked_at"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["github", "npm", "url"]
+        },
+        "checked_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "repo": {
+          "type": "string",
+          "pattern": "^[^/]+/[^/]+$"
+        },
+        "track": {
+          "type": "string",
+          "enum": ["release", "tag", "commit"],
+          "default": "release"
+        },
+        "ref": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "package": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": true

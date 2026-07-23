@@ -1,0 +1,41 @@
+name: Upstream heartbeat
+
+# Detects when an externally-collected asset's upstream (frontmatter's
+# `upstream` block) has released something newer than what we pinned.
+# Read-only + notify-only: opens/dedups GitHub issues, never touches the
+# working tree or auto-applies anything (see scripts/heartbeat.mjs header
+# for the check-updates.mjs vs heartbeat.mjs direction split).
+on:
+  schedule:
+    - cron: "0 8 * * 1" # every Monday 08:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: heartbeat
+  cancel-in-progress: false
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Node 24, matching deploy.yml's setup (see that workflow for the
+      # npm-11 lockfile rationale).
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Run heartbeat (detect + open/dedup issues)
+        run: node scripts/heartbeat.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
