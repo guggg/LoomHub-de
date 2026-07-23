@@ -4,9 +4,9 @@ description: 安裝進 agent 的資料工程設計能力——依 Bronze/Silver/
 type: skill
 category: development
 tags: [data-engineering, etl, elt, lakehouse, dbt, spark, streaming]
-version: 0.1.0
-owner: "@GivorsHandsomeBoy"
-updated: 2026-07-17
+version: 0.1.1
+owner: "@Ty"
+updated: 2026-07-23
 source: https://github.com/msitarzewski/agency-agents/blob/main/engineering/engineering-data-engineer.md
 license: MIT
 ---

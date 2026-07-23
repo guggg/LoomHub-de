@@ -4,9 +4,9 @@ description: 安裝進 agent 的資料庫可靠性設計能力——聚焦高可
 type: skill
 category: ops
 tags: [database, reliability, high-availability, backup, disaster-recovery, migration]
-version: 0.1.0
-owner: "@GivorsHandsomeBoy"
-updated: 2026-07-17
+version: 0.1.1
+owner: "@Ty"
+updated: 2026-07-23
 source: https://github.com/msitarzewski/agency-agents/blob/main/engineering/engineering-database-reliability-engineer.md
 license: MIT
 ---

@@ -79,6 +79,11 @@ node scripts/install-skill.mjs <skill-name>
 
 3. **問使用哪家 / 哪些 agent**。問使用者：「你用 Claude Code、Codex、還是 Gemini？（可多選）」
 
+3.5. **問署名**。問使用者：「你之後在 LoomHub-de 分享資產時，想用什麼名稱署名？（例如 `@Ty`）」
+   **一定要問、等使用者回答**，把答案記為 `<OWNER_HANDLE>`。**絕不可**用 OS 使用者名稱、
+   `git config user.name` 或任何自行推斷的值代替——那正是造成署名錯誤（例如把 `@Ty` 寫成
+   `@cfh00585519`）的來源。使用者給的值逐字使用（若沒帶 `@` 可提議補上，但仍以使用者確認為準）。
+
 4. **對每個選定的廠商，注入全域主動偵測區塊——先說明、再徵求同意、才動手**：
 
    對應的全域檔案：
@@ -95,8 +100,9 @@ node scripts/install-skill.mjs <skill-name>
    > 你的工作是否適合沈澱成 LoomHub-de 資產、並主動問你一句。可以加嗎？」
 
    使用者同意後，把 **[`docs/templates/global-detection-block.md`](docs/templates/global-detection-block.md)**
-   裡的固定文字（`{{REPO_PATH}}` 換成步驟 1 的實際路徑）寫入該檔案。該檔是這段文字的唯一真實
-   來源——`docs/03-spec.md` §9.0 也引用同一份，不要各自複製。
+   裡的固定文字（`{{REPO_PATH}}` 換成步驟 1 的實際路徑、`{{OWNER_HANDLE}}` 換成步驟 3.5 使用者
+   親口指定的署名）寫入該檔案。該檔是這段文字的唯一真實來源——`docs/03-spec.md` §9.0 也引用
+   同一份，不要各自複製。
 
    合併規則（**冪等、可重跑**）：
    - 檔案內若已有 `<!-- LoomHub-de:start -->` … `<!-- LoomHub-de:end -->` 界標 →
@@ -115,7 +121,8 @@ node scripts/install-skill.mjs <skill-name>
    - Authoring guide 在哪裡——`docs/authoring/`（依資源類型：prompt / skill / mcp-server / workflow / tool）。
 
 **注意事項（給 agent）：**
-- 步驟 1、3、4 都是**互動式**，不可自行假設答案跳過。
+- 步驟 1、3、3.5、4 都是**互動式**，不可自行假設答案跳過。步驟 3.5（署名）尤其不可用
+  OS 使用者名稱或 git config 代答——署名必須由使用者親口指定。
 - 步驟 4 的「先說明再確認」是硬性要求，即使使用者在步驟 0 已經說了「幫我裝」，那只是同意
   安裝 Loom，**不等於**同意修改他的全域個人設定檔——這兩件事要分開徵求同意。
 - `install.sh` 本身不會問問題、不會碰全域檔案——它只做 clone/pull + 呼叫
