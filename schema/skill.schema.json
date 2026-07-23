@@ -104,13 +104,16 @@
           "default": "release"
         },
         "ref": {
-          "type": "string"
+          "type": "string",
+          "description": "Pinned upstream position to compare against. track=release/tag: the tag_name. track=commit: full 40-char commit SHA of the last-pulled commit."
         },
         "branch": {
-          "type": "string"
+          "type": "string",
+          "description": "OPTIONAL, track=commit only. Upstream branch to watch (e.g. main). Omit to let GitHub use the upstream repo's default branch."
         },
         "path": {
-          "type": "string"
+          "type": "string",
+          "description": "OPTIONAL, track=commit only. File path within the upstream repo to scope the commit history to (e.g. engineering/foo.md). Omit to watch the whole repo's latest commit."
         },
         "package": {
           "type": "string"

@@ -9,6 +9,14 @@ owner: "@Ty"
 updated: 2026-07-23
 source: https://github.com/msitarzewski/agency-agents/blob/main/engineering/engineering-code-reviewer.md
 license: MIT
+upstream:
+  type: github
+  repo: msitarzewski/agency-agents
+  track: commit
+  path: engineering/engineering-code-reviewer.md
+  branch: main
+  ref: 6233a445b9b3d0582d574064ba56adc8082f358f
+  checked_at: 2026-07-23
 ---
 
 ## 用途 / What

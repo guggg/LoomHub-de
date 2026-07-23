@@ -9,10 +9,10 @@
 #
 # ⚠️ @OWNER-GH-USERNAME 是 placeholder —— 請 @Ty 換成實際的 GitHub username 再生效。
 
-/docs/          @OWNER-GH-USERNAME
-/schema/        @OWNER-GH-USERNAME
-/scripts/       @OWNER-GH-USERNAME
-/AGENTS.md      @OWNER-GH-USERNAME
-/README.md      @OWNER-GH-USERNAME
-/.github/       @OWNER-GH-USERNAME
-/install.sh     @OWNER-GH-USERNAME
+/docs/          @guggg
+/schema/        @guggg
+/scripts/       @guggg
+/AGENTS.md      @guggg
+/README.md      @guggg
+/.github/       @guggg
+/install.sh     @guggg
