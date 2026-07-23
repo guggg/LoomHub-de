@@ -30,6 +30,8 @@ LoomHub-de 是團隊的 AI Agent 資產中心（skill / prompt / mcp-server / wo
 若我同意，讀取 {{REPO_PATH}}/skills/loom/SKILL.md 並依它起草（Loom 會去讀 repo 內的
 格式與檢核規則）。若我拒絕或說現在不要，就別再追問，繼續原本的工作。
 
+修改 LoomHub-de 的規則檔（docs/schema/scripts 等）需經維護者 @Ty；你只負責分享/更新 skills/ 下的資產。
+
 原則：偵測是背景留意，不是打斷。不確定時傾向不問。
 <!-- LoomHub-de:end -->
 ```

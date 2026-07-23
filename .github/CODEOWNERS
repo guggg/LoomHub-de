@@ -1,0 +1,18 @@
+# CODEOWNERS — 軟治理，非硬鎖（本 repo 是 trust-based / no-PR / push-to-main）
+#
+# GitHub 的 CODEOWNERS 強制力只在「開 PR + 開啟 branch protection 要求 review」時生效。
+# 本 repo 沒有 PR 流程、沒有 branch protection，所以這份檔案本身不會擋任何 push —— 它的作用是
+# 「規則路徑歸誰維護」的可見宣告，配合 .github/workflows/rule-guard.yml 的 advisory 警告一起看。
+#
+# 規則路徑（docs/ schema/ scripts/ AGENTS.md README.md .github/ install.sh）＝ hub 的規則本身，
+# 歸維護者所有；skills/ 是自由路徑，任何人都可以新增/修改，不列在這裡。
+#
+# ⚠️ @OWNER-GH-USERNAME 是 placeholder —— 請 @Ty 換成實際的 GitHub username 再生效。
+
+/docs/          @OWNER-GH-USERNAME
+/schema/        @OWNER-GH-USERNAME
+/scripts/       @OWNER-GH-USERNAME
+/AGENTS.md      @OWNER-GH-USERNAME
+/README.md      @OWNER-GH-USERNAME
+/.github/       @OWNER-GH-USERNAME
+/install.sh     @OWNER-GH-USERNAME
