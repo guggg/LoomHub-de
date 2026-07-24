@@ -20,7 +20,7 @@
   },
   {
     "name": "codebase-memory-mcp",
-    "description": "Local MCP server (DeusData/codebase-memory-mcp) that indexes a codebase into a persistent tree-sitter knowledge graph — 158 languages, sub-ms structural queries, ~10x fewer tokens than file-by-file grep. Exposes 14+ tools for search, call-graph tracing, architecture overview, git-diff impact analysis, and Cypher-like queries. Single static binary, zero dependencies, 100% local, no telemetry.",
+    "description": "本地 MCP server（DeusData/codebase-memory-mcp），把整個 codebase 索引成持久化的 tree-sitter 知識圖譜——支援 158 種語言、次毫秒級結構查詢，相比逐檔 grep 約省 10 倍 token。提供 14+ 個工具做搜尋、呼叫鏈追蹤、架構總覽、git-diff 影響分析與類 Cypher 查詢。單一靜態執行檔、零依賴、100% 本地、無遙測。Local MCP server that indexes a codebase into a persistent tree-sitter knowledge graph — 158 languages, sub-ms structural queries, ~10x fewer tokens than file-by-file grep; 14+ read-only tools for search, call-graph tracing, architecture overview, and git-diff impact analysis.",
     "type": "mcp-server",
     "category": "development",
     "tags": [
@@ -30,11 +30,15 @@
       "tree-sitter",
       "code-search",
       "architecture",
-      "external"
+      "external",
+      "程式碼智慧",
+      "知識圖譜",
+      "程式碼搜尋",
+      "架構分析"
     ],
-    "version": "0.1.0",
+    "version": "0.1.1",
     "owner": "@Ty",
-    "updated": "2026-07-22",
+    "updated": "2026-07-24",
     "source": "https://github.com/DeusData/codebase-memory-mcp",
     "license": "MIT",
     "path": "skills/codebase-memory-mcp"
@@ -93,16 +97,16 @@
       "bootstrap",
       "contribution"
     ],
-    "version": "0.4.0",
+    "version": "0.5.0",
     "owner": "@Ty",
-    "updated": "2026-07-23",
+    "updated": "2026-07-24",
     "source": null,
     "license": null,
     "path": "skills/loom"
   },
   {
     "name": "openwiki",
-    "description": "External npm CLI (langchain-ai/openwiki) that writes and maintains agent-readable wikis for a codebase or a personal knowledge base, keeping docs in sync via `openwiki --update` and emitting Google Open Knowledge Format bundles. Recorded here as a pointer for the team; not installed into any agent.",
+    "description": "外部 npm CLI（langchain-ai/openwiki），為 codebase 或個人知識庫產生並維護「agent 可讀」的 wiki，透過 `openwiki --update` 讓文件與程式碼保持同步，輸出 Google Open Knowledge Format（OKF）套件。此處僅收錄為團隊指標，不裝進任何 agent。External npm CLI that writes and maintains agent-readable wikis for a codebase or personal knowledge base, kept in sync via `openwiki --update`, emitting Google Open Knowledge Format bundles. Recorded as a pointer; not installed into any agent.",
     "type": "tool",
     "category": "docs",
     "tags": [
@@ -111,11 +115,14 @@
       "external",
       "wiki",
       "agent-docs",
-      "okf"
+      "okf",
+      "文件",
+      "知識庫",
+      "自動文件"
     ],
-    "version": "0.1.0",
+    "version": "0.1.1",
     "owner": "@Ty",
-    "updated": "2026-07-22",
+    "updated": "2026-07-24",
     "source": "https://github.com/langchain-ai/openwiki",
     "license": "check the repo before relying on it beyond personal use",
     "path": "skills/openwiki"

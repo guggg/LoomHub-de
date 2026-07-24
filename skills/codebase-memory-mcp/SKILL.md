@@ -1,12 +1,12 @@
 ---
 name: codebase-memory-mcp
-description: Local MCP server (DeusData/codebase-memory-mcp) that indexes a codebase into a persistent tree-sitter knowledge graph — 158 languages, sub-ms structural queries, ~10x fewer tokens than file-by-file grep. Exposes 14+ tools for search, call-graph tracing, architecture overview, git-diff impact analysis, and Cypher-like queries. Single static binary, zero dependencies, 100% local, no telemetry.
+description: 本地 MCP server（DeusData/codebase-memory-mcp），把整個 codebase 索引成持久化的 tree-sitter 知識圖譜——支援 158 種語言、次毫秒級結構查詢，相比逐檔 grep 約省 10 倍 token。提供 14+ 個工具做搜尋、呼叫鏈追蹤、架構總覽、git-diff 影響分析與類 Cypher 查詢。單一靜態執行檔、零依賴、100% 本地、無遙測。Local MCP server that indexes a codebase into a persistent tree-sitter knowledge graph — 158 languages, sub-ms structural queries, ~10x fewer tokens than file-by-file grep; 14+ read-only tools for search, call-graph tracing, architecture overview, and git-diff impact analysis.
 type: mcp-server
 category: development
-tags: [mcp, code-intelligence, knowledge-graph, tree-sitter, code-search, architecture, external]
-version: 0.1.0
+tags: [mcp, code-intelligence, knowledge-graph, tree-sitter, code-search, architecture, external, 程式碼智慧, 知識圖譜, 程式碼搜尋, 架構分析]
+version: 0.1.1
 owner: "@Ty"
-updated: 2026-07-22
+updated: 2026-07-24
 source: https://github.com/DeusData/codebase-memory-mcp
 license: MIT
 ---
@@ -122,6 +122,8 @@ different service reached via an HTTP route, so the change needs a coordinated A
 ```
 
 ## 來源 / 出處
+
+> **中文導讀：** 這是一個**本地 MCP server**——把整個專案用 tree-sitter 解析成一張持久化的「程式碼知識圖譜」（函式、類別、呼叫鏈、HTTP 路由、跨服務關聯），存在本機 `~/.cache/`。掛上後，agent 就能用結構化查詢問「誰呼叫了 `ProcessOrder`？」「這個 diff 的影響範圍多大？」「給我架構總覽」，取代大量 grep/Read 的來回，實測約省 99% token。**全程本地、無遙測、無任何寫入工具**（只有 `delete_project` 會刪除該專案的本地圖譜快取）。我們收錄它是因為團隊常為了讀懂陌生 codebase 燒掉大量 token，而它零依賴、免建置基礎設施就能直接解決。以下正文保留英文原文，方便日後與上游對帳。
 
 - **Original source:** https://github.com/DeusData/codebase-memory-mcp (MIT licensed)
 - **Why we collected it:** teams repeatedly burn tokens on grep/Read cycles to understand

@@ -118,6 +118,7 @@
 - [ ] **命名與路徑：** 資料夾名 = frontmatter 的 `name`，kebab-case；主檔為 `SKILL.md`。
 - [ ] **版本 / 日期同步：** 內容有改動 → `version` 依 semver 升版、`updated` 改今日（`node scripts/check-version-bump.mjs` 可輔助檢查）。
 - [ ] **重疊偵測：** 同 `category` 內若有相似資源，正文寫明「與 X 的區別 / 適用場景差異」。
+- [ ] **外部英文資產的語言分層（僅 `source` 有值且原文英文時）：** `description` / `tags` 已中文化（可中英並列，因搜尋只吃這些欄位）；正文 body 保留英文原文（利於上游 diff 對帳）；「來源 / 出處」小節含中文導讀（Spec §3.1 語言政策）。
 
 型別專屬的檢核項（如 prompt 的「範例輸出必須逐節對應本文」、mcp-server 的「secret 不可寫死」）列在各自指引的「Contributor Checklist」小節，只放**該 type 特有**的項目，不重複上面共用項。
 
