@@ -19,44 +19,6 @@
     "path": "skills/agent-delegation-verify-standard"
   },
   {
-    "name": "backend-architect",
-    "description": "安裝進 agent 的後端系統架構設計能力——涵蓋服務拆分決策（monolith vs microservices）、資料庫 schema 與索引設計、API 契約治理（版本化、錯誤格式、rate limit）、可靠性模式（timeout/retry/circuit breaker/DLQ）與可觀測性（SLI/SLO、structured log、tracing）。強制 security-first、資料零停機遷移、API 契約明確化等準則。適用於新系統的架構設計、服務拆分決策、API 契約制定、或審查既有後端架構的可靠性與安全性。與 database-reliability-engineer（資料庫本身的高可用/備份/容錯移轉）不同——本資源是系統層級的架構決策，資料庫可用性/備份的執行細節交給後者。",
-    "type": "skill",
-    "category": "design",
-    "tags": [
-      "backend",
-      "architecture",
-      "api-design",
-      "microservices",
-      "database-design",
-      "reliability"
-    ],
-    "version": "0.1.1",
-    "owner": "@Ty",
-    "updated": "2026-07-23",
-    "source": "https://github.com/msitarzewski/agency-agents/blob/main/engineering/engineering-backend-architect.md",
-    "license": "MIT",
-    "path": "skills/backend-architect"
-  },
-  {
-    "name": "code-reviewer",
-    "description": "安裝進 agent 的程式碼審查能力——針對 PR / diff 依正確性、安全性、可維護性、效能、測試覆蓋五個面向審查，用 🔴 blocker / 🟡 suggestion / 💭 nit 三級標記問題，每個評論附「為什麼」與具體修改建議而非只下結論。適用於程式碼變更提交前檢查、PR 審查、需要教育性回饋而非單純批評的場景。與 agent-delegation-verify-standard（審查「委派 subagent 的流程」是否嚴謹）不同——本資源審查的是「程式碼本身的品質」。",
-    "type": "skill",
-    "category": "testing",
-    "tags": [
-      "code-review",
-      "security",
-      "testing",
-      "pull-request"
-    ],
-    "version": "0.1.1",
-    "owner": "@Ty",
-    "updated": "2026-07-23",
-    "source": "https://github.com/msitarzewski/agency-agents/blob/main/engineering/engineering-code-reviewer.md",
-    "license": "MIT",
-    "path": "skills/code-reviewer"
-  },
-  {
     "name": "codebase-memory-mcp",
     "description": "Local MCP server (DeusData/codebase-memory-mcp) that indexes a codebase into a persistent tree-sitter knowledge graph — 158 languages, sub-ms structural queries, ~10x fewer tokens than file-by-file grep. Exposes 14+ tools for search, call-graph tracing, architecture overview, git-diff impact analysis, and Cypher-like queries. Single static binary, zero dependencies, 100% local, no telemetry.",
     "type": "mcp-server",
@@ -76,47 +38,6 @@
     "source": "https://github.com/DeusData/codebase-memory-mcp",
     "license": "MIT",
     "path": "skills/codebase-memory-mcp"
-  },
-  {
-    "name": "data-engineer",
-    "description": "安裝進 agent 的資料工程設計能力——依 Bronze/Silver/Gold medallion 架構設計 ETL/ELT 管線，強制冪等、明確 schema contract、資料品質檢查與可觀測性等準則，並產出 PySpark/Delta Lake pipeline、dbt schema.yml 測試、Kafka streaming 等具體交付物範本。適用於設計新的資料管線、規劃 lakehouse 分層、或審查既有 ETL 是否符合可靠性標準。與 dbt-model-scaffold（把單一新來源機械式 scaffold 成 staging/intermediate/mart 三層並補測試）不同——本資源涵蓋更廣的管線設計決策（streaming、CDC、跨雲平台選型、SLA 與可觀測性），而非單一 scaffold 動作。",
-    "type": "skill",
-    "category": "development",
-    "tags": [
-      "data-engineering",
-      "etl",
-      "elt",
-      "lakehouse",
-      "dbt",
-      "spark",
-      "streaming"
-    ],
-    "version": "0.1.1",
-    "owner": "@Ty",
-    "updated": "2026-07-23",
-    "source": "https://github.com/msitarzewski/agency-agents/blob/main/engineering/engineering-data-engineer.md",
-    "license": "MIT",
-    "path": "skills/data-engineer"
-  },
-  {
-    "name": "database-reliability-engineer",
-    "description": "安裝進 agent 的資料庫可靠性設計能力——聚焦高可用架構、複寫拓樸、自動容錯移轉、備份與還原驗證（RPO/RTO）、零停機 schema migration（expand-contract）、連線池防護等維運面向，不涉及查詢調校。強制「未經還原驗證的備份不算備份」「容錯移轉沒演練過就當它不會動」等準則。適用於設計資料庫的高可用/備援策略、規劃零停機 schema 變更、或審查現有備份與容錯移轉是否真的可靠。與 data-engineer（設計 ETL/ELT 管線與 lakehouse 分層）不同——本資源管的是資料庫本身的可用性與資料安全,不是資料管線的資料品質與轉換邏輯。",
-    "type": "skill",
-    "category": "ops",
-    "tags": [
-      "database",
-      "reliability",
-      "high-availability",
-      "backup",
-      "disaster-recovery",
-      "migration"
-    ],
-    "version": "0.1.1",
-    "owner": "@Ty",
-    "updated": "2026-07-23",
-    "source": "https://github.com/msitarzewski/agency-agents/blob/main/engineering/engineering-database-reliability-engineer.md",
-    "license": "MIT",
-    "path": "skills/database-reliability-engineer"
   },
   {
     "name": "golden-qa-pipeline",
