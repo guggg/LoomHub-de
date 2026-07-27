@@ -1,0 +1,17 @@
+# Databricks Apps deploys from the Azure DevOps repo (source only — no build
+# artifacts are committed), so the frontend is built here at startup: the
+# catalog index and skill bodies must be generated before `vite build` copies
+# site/public/ into site/dist/, which server.js then serves.
+#
+# This needs the app container to reach the npm registry. If the corporate
+# network blocks it, build in Azure Pipelines instead (see azure-pipelines.yml)
+# and drop this back to just `node server.js`.
+command:
+  - sh
+  - -c
+  - >-
+    npm ci &&
+    node scripts/build-index.mjs &&
+    npm --prefix site ci &&
+    npm --prefix site run build &&
+    node server.js

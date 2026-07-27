@@ -1,0 +1,69 @@
+# Build the static catalog and deploy it to a Databricks App.
+#
+# The build has two data-generation steps that MUST run before `vite build`
+# copies site/public/ into dist/:
+#   1. scripts/build-index.mjs (repo root)          -> site/public/index.json
+#   2. site/scripts/build-bodies.mjs (site prebuild) -> site/public/skills.json
+#
+# Deployment uploads the repo (built dist included) to a workspace path, then
+# tells Databricks Apps to deploy from it. Auth uses a service principal via
+# variable group "loomhub-databricks" — never inline these values here:
+#   DATABRICKS_HOST          e.g. https://adb-<id>.<n>.azuredatabricks.net
+#   DATABRICKS_CLIENT_ID     service principal application ID
+#   DATABRICKS_CLIENT_SECRET service principal OAuth secret (mark as secret)
+
+trigger:
+  branches:
+    include: [main]
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: loomhub-databricks
+  - name: APP_NAME
+    value: loomhub-de
+  # Workspace source path the app deploys from.
+  - name: SOURCE_CODE_PATH
+    value: /Workspace/Shared/loomhub-de
+
+steps:
+  # Node 24 → npm 11, matching the npm that generated the lockfiles.
+  # (Node 20 / npm 10 misreads npm-11 lockfiles' esbuild optional-platform
+  # deps as "missing" and fails `npm ci`.)
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "24"
+    displayName: Set up Node 24
+
+  - script: npm ci
+    displayName: Install root deps
+
+  - script: node scripts/build-index.mjs
+    displayName: Build catalog index (site/public/index.json)
+
+  - script: npm ci
+    workingDirectory: site
+    displayName: Install site deps
+
+  # `prebuild` runs build-bodies.mjs, emitting site/public/skills.json before
+  # `vite build` copies public/ into dist/.
+  - script: npm run build
+    workingDirectory: site
+    displayName: Build site (vite build -> site/dist)
+
+  - script: curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+    displayName: Install Databricks CLI
+
+  # Upload the working tree (including the freshly built site/dist) to the
+  # workspace, then deploy the app from that path. --overwrite keeps repeat
+  # runs idempotent.
+  - script: |
+      set -e
+      databricks workspace import-dir . "$(SOURCE_CODE_PATH)" --overwrite
+      databricks apps deploy "$(APP_NAME)" --source-code-path "$(SOURCE_CODE_PATH)"
+    displayName: Deploy to Databricks Apps
+    env:
+      DATABRICKS_HOST: $(DATABRICKS_HOST)
+      DATABRICKS_CLIENT_ID: $(DATABRICKS_CLIENT_ID)
+      DATABRICKS_CLIENT_SECRET: $(DATABRICKS_CLIENT_SECRET)
