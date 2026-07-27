@@ -10,6 +10,9 @@
   "scripts": {
     "build-index": "node scripts/build-index.mjs",
     "install-skill": "node scripts/install-skill.mjs",
+    "check-secrets": "node scripts/check-secrets.mjs",
+    "hooks:install": "git config core.hooksPath .githooks && echo 'pre-commit hook enabled (advisory only — never blocks a commit)'",
+    "hooks:uninstall": "git config --unset core.hooksPath && echo 'pre-commit hook disabled'",
     "test:scripts": "vitest run",
     "test:site": "npm --prefix site run test",
     "test": "npm run test:scripts && npm run test:site"

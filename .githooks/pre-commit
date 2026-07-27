@@ -1,0 +1,27 @@
+#!/bin/sh
+# LoomHub-de pre-commit — advisory only, NEVER blocks a commit.
+#
+# Enable with: npm run hooks:install   (sets core.hooksPath to .githooks/)
+#
+# Two reminders run here, both non-blocking by design (this repo is
+# trust-based / no-PR, ADR-0006):
+#   1. check-secrets      — credential shapes in the staged diff. A secret on a
+#                           public repo is compromised the instant it lands, so
+#                           the only useful moment to look is before the commit.
+#   2. check-version-bump — AGENTS.md §5.1 item 7 (version/updated bumped).
+#
+# Both scripts exit 0 unconditionally; `|| true` and the final `exit 0` are
+# belt-and-braces so a crash in either can never stop you committing.
+
+repo_root=$(git rev-parse --show-toplevel) || exit 0
+cd "$repo_root" || exit 0
+
+command -v node >/dev/null 2>&1 || {
+  echo "[pre-commit] node not found — skipping advisory checks."
+  exit 0
+}
+
+node scripts/check-secrets.mjs || true
+node scripts/check-version-bump.mjs || true
+
+exit 0

@@ -85,6 +85,14 @@ these fail, do NOT commit; produce a problem list, the contributor fixes it, the
 > non-blocking spirit as `check-updates.mjs` — it never fails the commit, it just tells you what
 > to look at).
 
+> **憑證檢查（advisory）：** 這是**公開 repo**——憑證一旦 push 就等於已洩漏（history / fork /
+> 掃描 bot 都拿得到），刪 commit 沒有用,唯一有效的補救是**去把那把金鑰 rotate 掉**。所以要在
+> commit 前看：`node scripts/check-secrets.mjs`（掃 staged diff 的憑證特徵；裝了 `gitleaks`
+> 會一併跑,沒裝也能用）。`npm run hooks:install` 可把它接成 pre-commit hook,和
+> `check-version-bump.mjs` 一起自動跑。**兩者都只警告、永不阻擋 commit**（ADR-0006 trust-based）。
+> 它只抓**有固定形狀**的東西(`AKIA…` / `ghp_…` / `AccountKey=…` / PEM);公司專有名詞、內部事實
+> 寫成一般敘述時機器抓不到,那part靠人看——別把只有公司內部才看得懂的名詞、路徑、系統代號寫進資產。
+
 **Optional fields for externally-collected assets:** if this asset was collected/adapted from
 an external source (not team-original), add `source` (origin URL) and `license` (the original's
 license, e.g. MIT), and a `## 來源 / 出處` body section explaining what was adapted. Confirm the
