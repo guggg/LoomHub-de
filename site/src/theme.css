@@ -12,17 +12,16 @@
  *      (see the `--logo-*` tokens + <Logo/> in src/components/Header.jsx).
  *   Do NOT edit component JSX to restyle — only these tokens.
  *
- * BRAND: signature green #009143
- * (sourced from the official logo SVG). Restrained application — white/light
- * surfaces with green as the accent (links/buttons/active/badges), per the
- * a restrained corporate look. Dark mode uses a brighter green for contrast.
+ * BRAND: signature green #009143 (sourced from the team's logo SVG).
+ * Restrained application — white/light surfaces with green as the accent
+ * (links/buttons/active/badges). Dark mode uses a brighter green for contrast.
  * ========================================================================== */
 
 :root {
   /* --- Brand / logo slot -------------------------------------------------- */
   --logo-bg: #009143;            /* brand green (logo tile fallback bg) */
   --logo-fg: #ffffff;
-  --brand: #009143;              /* brand signature green (official) */
+  --brand: #009143;              /* brand signature green */
   --brand-hover: #00722e;        /* darker green for hover/emphasis */
   --brand-weak: #e3f3e9;         /* pale green tint for weak fills */
   --on-brand: #ffffff;           /* text/icon on brand-colored backgrounds */

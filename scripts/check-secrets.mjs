@@ -8,12 +8,15 @@
  * late; the only real remediation is ROTATING the credential. So the one place
  * a check is worth anything is *before* the commit exists.
  *
- * Scope is deliberately narrow — only what is **structurally detectable**:
- * credentials with a fixed shape (`AKIA…`, `ghp_…`, `AccountKey=…`, PEM
- * blocks). It does NOT try to catch company proprietary nouns or internal
- * facts written in ordinary prose — those have no signature, so a scanner
- * either needs a denylist (which would itself be the most sensitive file in
- * the repo) or produces noise. Those stay a human-review concern.
+ * Scope is deliberately narrow — only what is **structurally detectable**
+ * (credentials with a fixed shape: `AKIA…`, `ghp_…`, `AccountKey=…`, PEM
+ * blocks) plus one closed, hand-maintained list: the company's own name and
+ * domains (COMPANY_DENYLIST below). That list is intentionally small and
+ * literal — it does NOT try to catch arbitrary business proprietary nouns or
+ * internal facts written in ordinary prose. Those have no fixed signature, so
+ * a scanner for them would either need an open-ended denylist (which would
+ * itself become the most sensitive file in the repo) or produce constant
+ * noise. Those stay a human-review concern (AGENTS.md §5.1 item 8).
  *
  * Advisory, never blocking: it warns and exits 0, always. This repo is
  * trust-based / no-PR with no CI gate (ADR-0006) — a hard gate here would
@@ -49,9 +52,46 @@ const SELF_PATHS = [
 ];
 
 /**
- * High-confidence credential shapes. Each rule's `group` (default 0) is the
- * capture group holding the secret value — used for placeholder filtering and
- * redacted reporting.
+ * The company's own name and domains. Deliberately closed and literal — this
+ * is NOT the open-ended "proprietary noun" denylist the team already
+ * concluded it can't compile (AGENTS.md §5.1 item 8); it is one small,
+ * hand-maintained list of exact strings that identify who this hub belongs
+ * to. Update this list if the company's name/domain set changes.
+ */
+export const COMPANY_DENYLIST = [
+  "Cathay Financial Holdings",
+  "Cathay",
+  "國泰金控",
+  "國泰",
+  "cathayholdings.com.tw",
+  "cathayholdings.com",
+  "cathaylife.com.tw",
+];
+
+function escapeRegExp(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** Company-denylist rules, one per COMPANY_DENYLIST entry, ASCII terms word-bounded. */
+function buildCompanyRules() {
+  return COMPANY_DENYLIST.map((term) => {
+    const isAscii = /^[\x00-\x7f]+$/.test(term);
+    const escaped = escapeRegExp(term);
+    return {
+      id: `company-name:${term}`,
+      label: `company-identifying term "${term}"`,
+      sensitive: false, // not a secret to hide — show it plainly so the contributor sees what to remove
+      re: new RegExp(isAscii ? `\\b${escaped}\\b` : escaped, "gi"),
+    };
+  });
+}
+
+/**
+ * High-confidence credential shapes, plus the company denylist. Each rule's
+ * `group` (default 0) is the capture group holding the matched value — used
+ * for placeholder filtering and reporting. `sensitive` (default true) decides
+ * whether the reported value is redacted (a real secret) or shown plainly (a
+ * denylisted term — there's nothing to hide, the point is to show what to cut).
  */
 export const RULES = [
   {
@@ -123,6 +163,7 @@ export const RULES = [
     re: /\b(?:password|passwd|secret|api[_-]?key|access[_-]?token|client[_-]?secret)\b["'\s]*[:=]\s*["']?([^\s"',;]{8,})/gi,
     group: 1,
   },
+  ...buildCompanyRules(),
 ];
 
 /**
@@ -150,16 +191,17 @@ export function redact(value) {
   return `${value.slice(0, 4)}${"*".repeat(Math.min(8, value.length - 4))} (${value.length} chars)`;
 }
 
-/** Scan one line of text against RULES. Returns [{ruleId, label, value}]. */
+/** Scan one line of text against RULES. Returns [{ruleId, label, value, sensitive}]. */
 export function scanLine(text) {
   const findings = [];
   for (const rule of RULES) {
+    const sensitive = rule.sensitive !== false;
     rule.re.lastIndex = 0;
     let m;
     while ((m = rule.re.exec(text)) !== null) {
       const value = rule.group ? m[rule.group] : m[0];
-      if (isPlaceholder(value)) continue;
-      findings.push({ ruleId: rule.id, label: rule.label, value });
+      if (sensitive && isPlaceholder(value)) continue;
+      findings.push({ ruleId: rule.id, label: rule.label, value, sensitive });
       if (m[0] === "") break; // paranoia: never loop on a zero-width match
     }
   }
@@ -232,16 +274,31 @@ function main() {
   }
 
   const findings = scanDiff(diff);
-  if (findings.length > 0) {
+  const secretFindings = findings.filter((f) => f.sensitive);
+  const companyFindings = findings.filter((f) => !f.sensitive);
+
+  if (secretFindings.length > 0) {
     console.error("");
     console.error("⚠️  [check-secrets] 疑似憑證出現在這次 staged 的變更裡：");
-    for (const f of findings) {
+    for (const f of secretFindings) {
       console.error(`  - ${f.file}:${f.lineNo}  [${f.ruleId}] ${f.label} → ${redact(f.value)}`);
     }
     console.error("");
     console.error("這是公開 repo：憑證一旦 push 出去就等於已洩漏（history / fork / 掃描 bot 都拿得到），");
     console.error("刪掉 commit 沒有用 —— 唯一有效的補救是「去把那把金鑰換掉（rotate）」。");
     console.error("請在 commit 前移除，改用環境變數 / secret store 引用。若是誤判，直接繼續 commit 即可。");
+    console.error("");
+  }
+
+  if (companyFindings.length > 0) {
+    console.error("");
+    console.error("⚠️  [check-secrets] 這次 staged 的變更裡出現了公司識別詞：");
+    for (const f of companyFindings) {
+      console.error(`  - ${f.file}:${f.lineNo}  ${f.label} → "${f.value}"`);
+    }
+    console.error("");
+    console.error("這是公開 repo：公司名稱/網域一旦 push 出去就是永久曝光（history / fork 都留得住），");
+    console.error("請在 commit 前移除或改成不具名描述。若是誤判，直接繼續 commit 即可。");
     console.error("");
   }
 
@@ -254,7 +311,7 @@ function main() {
 
   if (findings.length === 0 && !gitleaks?.leaksFound) {
     const engine = gitleaks ? "內建規則 + gitleaks" : "內建規則（未安裝 gitleaks，可選）";
-    console.error(`[check-secrets] staged 變更未發現憑證特徵（${engine}）。`);
+    console.error(`[check-secrets] staged 變更未發現憑證或公司識別詞特徵（${engine}）。`);
   }
 
   process.exit(0); // advisory only — never blocks commit (ADR-0006, trust-based)

@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import {
   RULES,
+  COMPANY_DENYLIST,
   isPlaceholder,
   redact,
   scanLine,
@@ -64,6 +65,7 @@ describe("scanLine", () => {
       "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dBjftJeZ4CVPmB92K27uhbUJU1p1r",
       "Password=hunter2hunter2;",
       'client_secret: "nOtARealClientSecretValue123"',
+      ...COMPANY_DENYLIST,
     ].join("\n");
     const seen = new Set(fixture.split("\n").flatMap((l) => scanLine(l)).map((f) => f.ruleId));
     for (const rule of RULES) expect(seen, `rule ${rule.id} never matched`).toContain(rule.id);
@@ -74,6 +76,48 @@ describe("scanLine", () => {
     const first = scanLine(line);
     expect(scanLine(line)).toEqual(first);
     expect(scanLine(line)).toEqual(first);
+  });
+});
+
+describe("company denylist", () => {
+  it("flags every configured term at least once", () => {
+    for (const term of COMPANY_DENYLIST) {
+      const found = scanLine(`some text mentioning ${term} in passing`);
+      expect(found.some((f) => f.ruleId === `company-name:${term}`), `term "${term}" not flagged`).toBe(true);
+    }
+  });
+
+  it("marks company matches as non-sensitive (shown plainly, not redacted)", () => {
+    const [hit] = scanLine("BRAND: Cathay green");
+    expect(hit.sensitive).toBe(false);
+  });
+
+  it("is NOT filtered by the credential placeholder heuristic", () => {
+    // "Cathay" would not normally look like a placeholder, but this asserts
+    // company-denylist matches bypass isPlaceholder entirely (by design —
+    // a company name is never a "fake example value").
+    const found = scanLine("Cathay");
+    expect(found.map((f) => f.ruleId)).toContain("company-name:Cathay");
+  });
+
+  it("does not match inside an unrelated longer word (ASCII terms are word-bounded)", () => {
+    const found = scanLine("xCathayx and Cathayxyz are not the company name");
+    expect(found.some((f) => f.ruleId === "company-name:Cathay")).toBe(false);
+  });
+
+  it("matches the Chinese company name without word boundaries (CJK has none)", () => {
+    expect(scanLine("這是國泰的內部系統").some((f) => f.ruleId === "company-name:國泰")).toBe(true);
+  });
+
+  it("flows through scanDiff on an added line, reported unredacted", () => {
+    const diff = [
+      "+++ b/site/src/theme.css",
+      "@@ -0,0 +1 @@",
+      "+/* BRAND: 國泰金控 (Cathay Financial Holdings) */",
+    ].join("\n");
+    const hits = scanDiff(diff);
+    expect(hits.some((f) => f.ruleId === "company-name:Cathay Financial Holdings")).toBe(true);
+    expect(hits.some((f) => f.ruleId === "company-name:國泰金控")).toBe(true);
   });
 });
 

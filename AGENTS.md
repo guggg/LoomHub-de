@@ -78,6 +78,13 @@ these fail, do NOT commit; produce a problem list, the contributor fixes it, the
    change; minor = backward-compatible feature; major = breaking) **and** `updated` **must** be
    set to today's date. There is no CI to enforce this; skipping the bump breaks the hub's
    update detection (FR-6.2).
+8. **No company-identifying information.** This is a **public repo** — never include the
+   company's name (中/英文皆不可,任何變體/簡稱), internal domains, internal system codenames,
+   internal URLs, employee names/emails, or anything else that identifies which company this
+   hub belongs to. This applies to **every field and every body section**, not just credentials.
+   `node scripts/check-secrets.mjs` catches the company-name denylist automatically (see below);
+   still read your own diff before committing — prose facts written normally have no machine
+   signature and won't be caught by any scanner.
 
 > How to check item 7: `git diff HEAD -- skills/<name>/` — if there is any content change and
 > the `version`/`updated` lines are unchanged, item 7 fails. `node scripts/check-version-bump.mjs`
@@ -85,13 +92,16 @@ these fail, do NOT commit; produce a problem list, the contributor fixes it, the
 > non-blocking spirit as `check-updates.mjs` — it never fails the commit, it just tells you what
 > to look at).
 
-> **憑證檢查（advisory）：** 這是**公開 repo**——憑證一旦 push 就等於已洩漏（history / fork /
-> 掃描 bot 都拿得到），刪 commit 沒有用,唯一有效的補救是**去把那把金鑰 rotate 掉**。所以要在
-> commit 前看：`node scripts/check-secrets.mjs`（掃 staged diff 的憑證特徵；裝了 `gitleaks`
-> 會一併跑,沒裝也能用）。`npm run hooks:install` 可把它接成 pre-commit hook,和
-> `check-version-bump.mjs` 一起自動跑。**兩者都只警告、永不阻擋 commit**（ADR-0006 trust-based）。
-> 它只抓**有固定形狀**的東西(`AKIA…` / `ghp_…` / `AccountKey=…` / PEM);公司專有名詞、內部事實
-> 寫成一般敘述時機器抓不到,那part靠人看——別把只有公司內部才看得懂的名詞、路徑、系統代號寫進資產。
+> **憑證 + 公司識別詞檢查（advisory）：** 這是**公開 repo**——憑證或公司名稱一旦 push 就等於已
+> 曝光（history / fork / 掃描 bot 都拿得到），刪 commit 沒有用,唯一有效的補救是**憑證去 rotate
+> 掉、公司識別詞則是改寫歷史**。所以要在 commit 前看：`node scripts/check-secrets.mjs`（掃
+> staged diff 的憑證特徵**+公司名稱/網域 denylist**；裝了 `gitleaks` 會一併跑,沒裝也能用）。
+> `npm run hooks:install` 可把它接成 pre-commit hook,和 `check-version-bump.mjs` 一起自動跑。
+> **三者都只警告、永不阻擋 commit**（ADR-0006 trust-based）。denylist 只認**固定的公司名稱/網域
+> 字串**（見 `scripts/check-secrets.mjs` 的 `COMPANY_DENYLIST`）,不是任意業務專有名詞——那個
+> B 級 denylist 團隊列不出來,已經在設計階段放棄,見 item 8。憑證規則只抓**有固定形狀**的東西
+> (`AKIA…` / `ghp_…` / `AccountKey=…` / PEM);其他公司內部事實寫成一般敘述時機器抓不到,那部分
+> 靠人看。
 
 **Optional fields for externally-collected assets:** if this asset was collected/adapted from
 an external source (not team-original), add `source` (origin URL) and `license` (the original's
