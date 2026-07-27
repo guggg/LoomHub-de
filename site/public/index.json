@@ -19,6 +19,30 @@
     "path": "skills/agent-delegation-verify-standard"
   },
   {
+    "name": "claude-council",
+    "description": "外部 Claude Code plugin（hex/claude-council），把同一個問題並行丟給多家 AI（Gemini、OpenAI、Grok、Perplexity 的 API，或已登入的 codex / antigravity CLI），並排顯示各家答案再綜合出共識、分歧與建議；支援 --debate 兩輪交叉批判與 --agents 深度分析。適用於架構決策、技術選型、卡關 debug、安全審查等「單一模型偏誤可能誤導你」的場合。此處僅收錄為連結指標，不裝進任何 agent，安裝需自備至少一家 API key 或 codex/antigravity 訂閱。External Claude Code plugin that fans one question out to multiple AI providers in parallel and shows their answers side-by-side with a synthesis of consensus, divergence, and recommendation. Recorded as a pointer; not installed into any agent.",
+    "type": "tool",
+    "category": "design",
+    "tags": [
+      "multi-agent",
+      "second-opinion",
+      "architecture-decision",
+      "code-review",
+      "cli",
+      "external",
+      "claude-code-plugin",
+      "跨模型",
+      "架構決策",
+      "第二意見"
+    ],
+    "version": "0.1.0",
+    "owner": "@Miles",
+    "updated": "2026-07-27",
+    "source": "https://github.com/hex/claude-council",
+    "license": "MIT",
+    "path": "skills/claude-council"
+  },
+  {
     "name": "codebase-memory-mcp",
     "description": "本地 MCP server（DeusData/codebase-memory-mcp），把整個 codebase 索引成持久化的 tree-sitter 知識圖譜——支援 158 種語言、次毫秒級結構查詢，相比逐檔 grep 約省 10 倍 token。提供 14+ 個工具做搜尋、呼叫鏈追蹤、架構總覽、git-diff 影響分析與類 Cypher 查詢。單一靜態執行檔、零依賴、100% 本地、無遙測。Local MCP server that indexes a codebase into a persistent tree-sitter knowledge graph — 158 languages, sub-ms structural queries, ~10x fewer tokens than file-by-file grep; 14+ read-only tools for search, call-graph tracing, architecture overview, and git-diff impact analysis.",
     "type": "mcp-server",
