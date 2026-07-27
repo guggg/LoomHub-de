@@ -2,9 +2,9 @@
 name: claude-council
 description: 外部 Claude Code plugin（hex/claude-council），把同一個問題並行丟給多家 AI（Gemini、OpenAI、Grok、Perplexity 的 API，或已登入的 codex / antigravity CLI），並排顯示各家答案再綜合出共識、分歧與建議；支援 --debate 兩輪交叉批判與 --agents 深度分析。適用於架構決策、技術選型、卡關 debug、安全審查等「單一模型偏誤可能誤導你」的場合。此處僅收錄為連結指標，不裝進任何 agent，安裝需自備至少一家 API key 或 codex/antigravity 訂閱。External Claude Code plugin that fans one question out to multiple AI providers in parallel and shows their answers side-by-side with a synthesis of consensus, divergence, and recommendation. Recorded as a pointer; not installed into any agent.
 type: tool
-category: design
+category: general
 tags: [multi-agent, second-opinion, architecture-decision, code-review, cli, external, claude-code-plugin, 跨模型, 架構決策, 第二意見]
-version: 0.1.0
+version: 0.1.1
 owner: "@Miles"
 updated: 2026-07-27
 source: https://github.com/hex/claude-council
@@ -40,11 +40,13 @@ fixes — the parallel calls cost real tokens and add latency for nothing. Also 
 if you have neither an API key for one of the four providers nor a `codex` /
 `antigravity` login, since there would be no second vendor to consult.
 
-Adjacent hub asset: `grill-me` (category `general`) also scrutinizes a decision before
-you build, but it is a single agent interrogating **your own** plan with Socratic
-questions. claude-council instead has several **different vendors' models** answer the
-same question independently so you can compare where they diverge. Different mechanisms;
-they compose fine in sequence.
+How this differs from the other `general` assets. `grill-me` also scrutinizes a decision
+before you build, but it is a single agent interrogating **your own** plan with Socratic
+questions until nothing is left undecided; claude-council instead has several
+**different vendors' models** answer the same question independently so you can see where
+they diverge. The two compose in sequence — grill-me to surface which decisions are still
+open, claude-council to get cross-vendor input on the hard ones. `loom` shares the
+category but not the purpose: it drafts new hub assets rather than evaluating a decision.
 
 ## 使用方式 / How
 
