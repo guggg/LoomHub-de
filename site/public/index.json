@@ -150,5 +150,26 @@
     "source": "https://github.com/langchain-ai/openwiki",
     "license": "check the repo before relying on it beyond personal use",
     "path": "skills/openwiki"
+  },
+  {
+    "name": "slide-study",
+    "description": "把簡報 PDF、錄音、錄影或參考附件整理成一份離線單檔 HTML 研究報告，可另外產出逐字稿與 NotebookLM 產物。單一入口 create，自動判斷來源情境（簡報逐頁對照、會議章節、錄影畫面重建、附件輔助），中間素材全部走系統暫存不落地。適用於研究一場演講的簡報、把會議錄音整理成可讀報告、從螢幕錄影重建重點畫面，或以錄音為主、PDF 附件為輔的綜合分析。使用者說「研究這份簡報」「把錄影整理成報告」「整理逐字稿」「錄影轉 HTML」時使用。需要 macOS + Apple Silicon。",
+    "type": "skill",
+    "category": "research",
+    "tags": [
+      "presentation",
+      "transcription",
+      "whisper",
+      "html-report",
+      "meeting-notes",
+      "screencast",
+      "notebooklm"
+    ],
+    "version": "0.1.0",
+    "owner": "@Miles",
+    "updated": "2026-07-28",
+    "source": null,
+    "license": null,
+    "path": "skills/slide-study"
   }
 ]
