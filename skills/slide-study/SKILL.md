@@ -4,7 +4,7 @@ description: 把簡報 PDF、錄音、錄影或參考附件整理成一份離線
 type: skill
 category: research
 tags: [presentation, transcription, whisper, html-report, meeting-notes, screencast, notebooklm]
-version: 0.1.0
+version: 0.1.1
 owner: "@Miles"
 updated: 2026-07-28
 ---

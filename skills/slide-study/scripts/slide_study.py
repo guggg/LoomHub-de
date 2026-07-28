@@ -13,7 +13,7 @@ Copyright (c) 2026 @Miles
 中間素材一律走系統暫存，結束即清除；只有交付成果寫進 <folder>/成果/。
 ASR 使用 mlx-whisper，需 macOS + Apple Silicon。
 """
-import argparse, base64, json, os, re, subprocess, sys, glob, html, shutil, time, hashlib, tempfile
+import argparse, base64, json, os, re, subprocess, sys, html, shutil, time, hashlib, tempfile
 from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
