@@ -83,8 +83,14 @@ these fail, do NOT commit; produce a problem list, the contributor fixes it, the
    internal URLs, employee names/emails, or anything else that identifies which company this
    hub belongs to. This applies to **every field and every body section**, not just credentials.
    `node scripts/check-secrets.mjs` catches the company-name denylist automatically (see below);
-   still read your own diff before committing — prose facts written normally have no machine
-   signature and won't be caught by any scanner.
+   that denylist only matches a closed list of literal strings — it does NOT understand meaning.
+   **The reviewing agent (you) must additionally judge this semantically, not just run the
+   scanner:** read the new/changed content and ask "would a reader infer which company this came
+   from, even without any denylisted word appearing?" — e.g. describing an internal workflow
+   specific to one industry/business unit in enough identifying detail, referencing an internal
+   ticket/project codename that isn't on the denylist, or phrasing that only makes sense inside
+   one company's org structure. This is a judgment call the scanner structurally cannot make; if
+   in doubt, flag it to the contributor rather than assuming it's fine.
 
 > How to check item 7: `git diff HEAD -- skills/<name>/` — if there is any content change and
 > the `version`/`updated` lines are unchanged, item 7 fails. `node scripts/check-version-bump.mjs`
