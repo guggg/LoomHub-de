@@ -1,5 +1,19 @@
 # AGENTS.md — Commit-time self-check for LoomHub-de
 
+> **⚠️ 最高原則（優先於本文件其他所有規則，含下方的邊界宣告）：不得洩漏公司身份資訊。**
+> 這是**公開 repo**。§5.1 item 8（禁止公司識別資訊，含語意判斷）不是清單裡普通一項——它的優先權
+> 高於本文件其他所有規則，也高於「trust-based / no-PR / advisory-only」這個治理精神本身。理由是
+> 後果不對稱：本文件其他檢查項目沒過，最壞結果是格式不合規、之後補救就好；這一項沒過，最壞結果是
+> 公司身份永久曝光在公開網路上（fork / 掃描 bot / 快取都留得住，改寫歷史也只解決你控制得到的
+> repo），補救不完全。因此：
+> - **檢查順序上，item 8 最先看**，且不因「趕著分享」「其他項目都已經過了」而略過或延後。
+> - item 8 的語意判斷遇到不確定，一律往保守方向走 — **寧可多問一次貢獻者，不要自己判斷「應該沒
+>   事」**。
+> - 這一項**沒有 advisory 的空間**：`check-secrets.mjs` 的掃描、version-bump 提醒都設計成「警告
+>   但不擋 commit」，那個豁免**不適用於 item 8**——scanner 只能抓固定字串，語意層的最後一道防線
+>   就是執行本文件的 agent 本身，判斷錯了就是真的洩漏，沒有事後補救鍵。
+> - 這條原則對所有 committer 一致適用，不分是本次任務的貢獻者、或後續接手的其他 agent。
+
 > **邊界宣告（給 AI agent）：** `docs/` `schema/` `scripts/` `AGENTS.md` `README.md` `.github/`
 > `install.sh` 這些是 hub 規則本身，歸維護者 **@Ty** 所有（見 `.github/CODEOWNERS`）。**AI agent
 > 不得擅自修改這些路徑** —— 若任務看起來需要改到它們，先停下來、請使用者去聯繫 @Ty，不要自己動手。
@@ -78,7 +92,7 @@ these fail, do NOT commit; produce a problem list, the contributor fixes it, the
    change; minor = backward-compatible feature; major = breaking) **and** `updated` **must** be
    set to today's date. There is no CI to enforce this; skipping the bump breaks the hub's
    update detection (FR-6.2).
-8. **No company-identifying information.** This is a **public repo** — never include the
+8. **No company-identifying information (最高原則 — 見檔案最上方).** This is a **public repo** — never include the
    company's name (中/英文皆不可,任何變體/簡稱), internal domains, internal system codenames,
    internal URLs, employee names/emails, or anything else that identifies which company this
    hub belongs to. This applies to **every field and every body section**, not just credentials.
